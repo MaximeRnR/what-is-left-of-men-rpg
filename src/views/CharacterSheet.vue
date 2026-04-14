@@ -109,7 +109,7 @@ function goToEdit() {
           <span class="material-symbols-outlined text-base absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">search</span>
         </div>
       </div>
-      <div class="flex flex-wrap gap-2">
+      <div class="grid grid-cols-2 gap-2">
         <router-link to="/" class="inline-flex items-center gap-1 text-secondary text-xs font-label uppercase tracking-widest">
           <span class="material-symbols-outlined text-sm">arrow_back</span> Retour
         </router-link>
