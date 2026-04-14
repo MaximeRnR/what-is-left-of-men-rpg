@@ -77,6 +77,11 @@ function getChosenSpecialization(skillId: SkillId) {
   return null
 }
 
+function hasReroll(description: string): boolean {
+  const lower = description.toLowerCase()
+  return lower.includes('relance') || lower.includes('relancer')
+}
+
 function goToEdit() {
   router.push(`/character/${characterId}/edit`)
 }
@@ -166,9 +171,10 @@ function goToEdit() {
             :key="tier.level"
             class="mb-3"
           >
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 flex-wrap">
               <span class="font-label text-xs uppercase tracking-widest" :class="dieColorClass[tier.die] ?? 'text-on-surface'">{{ tier.talentName }}</span>
               <span class="tag" :style="{ borderColor: `var(--color-die-${tier.die})`, color: `var(--color-die-${tier.die})` }">{{ tier.die }}</span>
+              <span v-if="hasReroll(tier.description)" class="tag" style="border-color: var(--color-die-d20); color: var(--color-die-d20);">RELANCE</span>
             </div>
             <p class="text-on-surface-variant text-xs mt-1">{{ tier.description }}</p>
           </div>
