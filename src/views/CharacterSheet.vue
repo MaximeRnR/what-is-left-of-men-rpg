@@ -40,21 +40,18 @@ function skillsByCategory(category: SkillCategory) {
 function getSkillInfo(skillId: SkillId) {
   if (!character.value) return null
   const spent = character.value.skills[skillId]?.pointsSpent ?? 0
-  const bonus = character.value.bonusPoints[skillId] ?? 0
-  const result = computeSkillTier(spent + bonus, 0)
+  const result = computeSkillTier(spent, 0)
   return result
 }
 
 function getVisibleTalentsForSkill(skillId: SkillId) {
   if (!character.value) return []
   const spent = character.value.skills[skillId]?.pointsSpent ?? 0
-  const bonus = character.value.bonusPoints[skillId] ?? 0
-  const totalPoints = spent + bonus
 
   const skillDef = allSkills.find(s => s.id === skillId)
   if (!skillDef) return []
 
-  const unlocked = skillDef.tiers.filter(t => t.costToReach <= totalPoints)
+  const unlocked = skillDef.tiers.filter(t => t.costToReach <= spent)
   // Show incompetent malus ONLY when still at incompetent tier, hide once surpassed
   if (unlocked.length > 1) {
     return unlocked.filter(t => !t.isMalus)
@@ -145,6 +142,7 @@ const ROLL_BONUSES: Omit<RollBonus, 'value'>[] = [
   { skillId: 'ombre', tier: 'initie', conditional: false, label: 'Jets d\'Ombre' },
   { skillId: 'ombre', tier: 'entraine', conditional: true, label: 'Touche EMBUSQUE (COURTE/POING)' },
   // COEUR
+  { skillId: 'charisme', tier: 'initie', conditional: false, label: 'Jets de COEUR' },
   { skillId: 'empathie', tier: 'initie', conditional: false, label: 'Jets d\'Empathie' },
   { skillId: 'courage', tier: 'initie', conditional: true, label: 'COURAGE vs Trait choisi' },
   { skillId: 'courage', tier: 'entraine', conditional: true, label: 'Prochain jet allie (1x/Scene)' },
