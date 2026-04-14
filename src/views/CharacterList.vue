@@ -10,6 +10,8 @@ function createNew() {
 }
 
 function deleteCharacter(id: string) {
+  const char = store.characters.find(c => c.id === id)
+  if (!confirm(`Supprimer ${char?.name ?? 'ce personnage'} ?`)) return
   store.deleteCharacter(id)
 }
 
