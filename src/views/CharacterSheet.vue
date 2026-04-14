@@ -292,7 +292,7 @@ function goToEdit() {
             <strong class="text-on-surface text-sm">{{ skill.name }}</strong>
             <em class="text-on-surface-variant text-xs ml-2">{{ skill.latinName }}</em>
           </div>
-          <div class="flex items-center gap-1.5 justify-end">
+          <div class="flex items-center gap-1.5 justify-end flex-wrap">
             <template v-if="getSkillInfo(skill.id as SkillId)?.tier">
               <span class="die-display text-lg font-bold" :class="dieColorClass[getSkillInfo(skill.id as SkillId)!.die!] ?? ''">{{ getSkillInfo(skill.id as SkillId)!.die }}</span>
               <span class="tag" :style="{ borderColor: `var(--color-die-${getSkillInfo(skill.id as SkillId)!.die})`, color: `var(--color-die-${getSkillInfo(skill.id as SkillId)!.die})` }">{{ getSkillInfo(skill.id as SkillId)!.tier }}</span>
