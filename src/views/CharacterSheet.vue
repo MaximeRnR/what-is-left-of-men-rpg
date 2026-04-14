@@ -89,6 +89,15 @@ function hasReroll(description: string): boolean {
   return lower.includes('relance') || lower.includes('relancer')
 }
 
+function getSkillTierIndex(skillId: SkillId): number {
+  // Returns how many tiers above incompetent: 0=incompetent, 1=initie, 2=entraine, 3=competent, 4=maitre, 5=legende
+  if (!character.value) return 0
+  const info = getSkillInfo(skillId)
+  if (!info?.tier) return 0
+  const tierOrder = ['incompetent', 'initie', 'entraine', 'competent', 'maitre', 'legende']
+  return tierOrder.indexOf(info.tier)
+}
+
 function detectTags(description: string): { label: string, color: string }[] {
   const tags: { label: string, color: string }[] = []
   const d = description.toLowerCase()
@@ -102,6 +111,16 @@ function detectTags(description: string): { label: string, color: string }[] {
   if (/\+\d+\s*(pour toucher|touche\b|aux tirs)/i.test(d)) tags.push({ label: '+TOUCHE', color: 'var(--color-die-d10)' })
   if (/\+\d+\s*armure/i.test(d)) tags.push({ label: '+ARMURE', color: 'var(--color-on-surface-variant)' })
   if (/\-\d+\s*cs\b/i.test(d)) tags.push({ label: '-CS', color: 'var(--color-tertiary)' })
+
+  // Cross-skill: Tromperie Entraine — "+1 par Niveau de CHARISME (max +3)"
+  if (d.includes('par niveau de charisme')) {
+    const charismeLevel = getSkillTierIndex('charisme')
+    // Bonus = tiers above incompetent, capped at 3
+    const bonus = Math.min(charismeLevel, 3)
+    if (bonus > 0) {
+      tags.push({ label: `+${bonus} (CHARISME)`, color: 'var(--color-secondary)' })
+    }
+  }
 
   return tags
 }
