@@ -77,6 +77,15 @@
 }
 
 /* --- Global Styles --- */
+* {
+  -webkit-user-select: none;
+  user-select: none;
+}
+input, textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 body {
   background-color: var(--color-background);
   color: var(--color-on-background);
