@@ -49,11 +49,6 @@ function getTierForSkill(skillId: SkillId) {
   return skillDef?.tiers.find(t => t.level === result.tier)
 }
 
-function needsSpecialization(skillId: SkillId): boolean {
-  const tier = getTierForSkill(skillId)
-  return !!tier?.specializations?.length && !character.value.specializations[skillId]
-}
-
 function selectSpecialization(skillId: SkillId, specId: string) {
   character.value.specializations[skillId] = specId
 }

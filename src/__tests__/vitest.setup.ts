@@ -1,5 +1,3 @@
-import { vi } from 'vitest'
-
 // Provide a proper localStorage mock for the jsdom environment.
 // @vue/devtools-kit imports during the module-runner phase can overwrite
 // the global localStorage with Node's built-in webstorage (which lacks
