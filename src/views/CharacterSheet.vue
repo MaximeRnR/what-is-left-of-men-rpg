@@ -70,88 +70,108 @@ function goToEdit() {
 </script>
 
 <template>
-  <div class="character-sheet" v-if="character">
-    <header>
-      <h1>{{ character.name }}</h1>
-      <div class="actions">
-        <router-link to="/">Retour</router-link>
-        <button @click="goToEdit">Modifier</button>
-        <router-link :to="`/character/${characterId}/inventory`">Inventaire</router-link>
-        <router-link :to="`/character/${characterId}/tracker`">Combat</router-link>
+  <div class="min-h-dvh bg-background px-4 py-6 max-w-2xl mx-auto" v-if="character">
+    <header class="mb-6">
+      <h1 class="font-headline text-2xl uppercase tracking-wider text-on-surface mb-3">{{ character.name }}</h1>
+      <div class="flex flex-wrap gap-2">
+        <router-link to="/" class="inline-flex items-center gap-1 text-secondary text-xs font-label uppercase tracking-widest">
+          <span class="material-symbols-outlined text-sm">arrow_back</span> Retour
+        </router-link>
+        <button @click="goToEdit" class="inline-flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">edit</span> Modifier
+        </button>
+        <router-link :to="`/character/${characterId}/inventory`" class="inline-flex items-center gap-1 text-secondary text-xs font-label uppercase tracking-widest">
+          <span class="material-symbols-outlined text-sm">inventory_2</span> Inventaire
+        </router-link>
+        <router-link :to="`/character/${characterId}/tracker`" class="inline-flex items-center gap-1 text-secondary text-xs font-label uppercase tracking-widest">
+          <span class="material-symbols-outlined text-sm">swords</span> Combat
+        </router-link>
       </div>
+      <div class="border-t border-outline-variant mt-3"></div>
     </header>
 
-    <section v-if="character.story" class="story">
-      <h2>Histoire</h2>
-      <p>{{ character.story }}</p>
+    <section v-if="character.story" class="mb-6">
+      <h2 class="mb-2">Histoire</h2>
+      <p class="text-on-surface-variant text-sm leading-relaxed">{{ character.story }}</p>
     </section>
 
-    <section class="stats-summary">
-      <h2>Statistiques</h2>
-      <div class="stat-grid">
-        <div class="stat">
-          <span class="stat-label">PS</span>
-          <span class="stat-value">{{ stats.maxHP.value }}</span>
+    <section class="mb-6">
+      <h2 class="mb-3">Statistiques</h2>
+      <div class="grid grid-cols-3 gap-2">
+        <div class="bg-surface-container border border-outline-variant p-3 text-center">
+          <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">PS</p>
+          <p class="die-display text-primary">{{ stats.maxHP.value }}</p>
+          <div class="h-1 bg-surface-container-lowest mt-2"><div class="stat-bar-fill hp h-full w-full"></div></div>
         </div>
-        <div class="stat">
-          <span class="stat-label">PSM</span>
-          <span class="stat-value">{{ stats.maxSanity.value }}</span>
+        <div class="bg-surface-container border border-outline-variant p-3 text-center">
+          <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">PSM</p>
+          <p class="die-display text-secondary">{{ stats.maxSanity.value }}</p>
+          <div class="h-1 bg-surface-container-lowest mt-2"><div class="stat-bar-fill sanity h-full w-full"></div></div>
         </div>
-        <div class="stat">
-          <span class="stat-label">Souffle</span>
-          <span class="stat-value">{{ stats.maxSouffle.value }}</span>
+        <div class="bg-surface-container border border-outline-variant p-3 text-center">
+          <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Souffle</p>
+          <p class="die-display text-tertiary">{{ stats.maxSouffle.value }}</p>
+          <div class="h-1 bg-surface-container-lowest mt-2"><div class="stat-bar-fill souffle h-full w-full"></div></div>
         </div>
-        <div class="stat" v-if="stats.stModifier.value !== 0">
-          <span class="stat-label">ST</span>
-          <span class="stat-value">{{ stats.stModifier.value > 0 ? '+' : '' }}{{ stats.stModifier.value }}</span>
+      </div>
+      <div class="flex gap-2 mt-2" v-if="stats.stModifier.value !== 0 || stats.initiativeModifier.value !== 0">
+        <div v-if="stats.stModifier.value !== 0" class="bg-surface-container border border-outline-variant px-4 py-2 text-center">
+          <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">ST</p>
+          <p class="font-headline text-lg text-on-surface">{{ stats.stModifier.value > 0 ? '+' : '' }}{{ stats.stModifier.value }}</p>
         </div>
-        <div class="stat" v-if="stats.initiativeModifier.value !== 0">
-          <span class="stat-label">Initiative</span>
-          <span class="stat-value">{{ stats.initiativeModifier.value > 0 ? '+' : '' }}{{ stats.initiativeModifier.value }}</span>
+        <div v-if="stats.initiativeModifier.value !== 0" class="bg-surface-container border border-outline-variant px-4 py-2 text-center">
+          <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Initiative</p>
+          <p class="font-headline text-lg text-on-surface">{{ stats.initiativeModifier.value > 0 ? '+' : '' }}{{ stats.initiativeModifier.value }}</p>
         </div>
       </div>
     </section>
 
-    <section v-for="cat in categories" :key="cat.key" class="skill-category">
-      <h2>{{ cat.label }}</h2>
+    <section v-for="cat in categories" :key="cat.key" class="mb-6">
+      <h2 class="mb-3 pb-2 border-b border-outline-variant">{{ cat.label }}</h2>
 
-      <div v-for="skill in skillsByCategory(cat.key)" :key="skill.id" class="skill-block">
-        <div class="skill-header">
-          <strong>{{ skill.name }}</strong>
-          <em>{{ skill.latinName }}</em>
-          <template v-if="getSkillInfo(skill.id as SkillId)?.tier">
-            <span class="die">{{ getSkillInfo(skill.id as SkillId)!.die }}</span>
-            <span class="tier">{{ getSkillInfo(skill.id as SkillId)!.tier }}</span>
-            <span v-if="getSkillInfo(skill.id as SkillId)!.totalBonus > 0" class="bonus">
-              +{{ getSkillInfo(skill.id as SkillId)!.totalBonus }}
-            </span>
-          </template>
-          <span v-else class="no-points">—</span>
+      <div v-for="skill in skillsByCategory(cat.key)" :key="skill.id" class="bg-surface-container border border-outline-variant p-3 mb-2">
+        <div class="flex items-center justify-between">
+          <div>
+            <strong class="text-on-surface text-sm">{{ skill.name }}</strong>
+            <em class="text-on-surface-variant text-xs ml-2">{{ skill.latinName }}</em>
+          </div>
+          <div class="flex items-center gap-2">
+            <template v-if="getSkillInfo(skill.id as SkillId)?.tier">
+              <span class="tag primary">{{ getSkillInfo(skill.id as SkillId)!.die }}</span>
+              <span class="tag secondary">{{ getSkillInfo(skill.id as SkillId)!.tier }}</span>
+              <span v-if="getSkillInfo(skill.id as SkillId)!.totalBonus > 0" class="tag">
+                +{{ getSkillInfo(skill.id as SkillId)!.totalBonus }}
+              </span>
+            </template>
+            <span v-else class="text-on-surface-variant text-xs">—</span>
+          </div>
         </div>
 
-        <div class="talents" v-if="getUnlockedTalentsForSkill(skill.id as SkillId).length > 0">
+        <div v-if="getUnlockedTalentsForSkill(skill.id as SkillId).length > 0" class="mt-2 pt-2 border-t border-outline-variant">
           <div
             v-for="tier in getUnlockedTalentsForSkill(skill.id as SkillId)"
             :key="tier.level"
-            class="talent"
-            :class="{ malus: tier.isMalus }"
+            class="mb-2"
+            :class="{ 'text-error': tier.isMalus }"
           >
-            <span class="talent-name">{{ tier.talentName }}</span>
-            <span class="talent-die">{{ tier.die }}</span>
-            <p class="talent-desc">{{ tier.description }}</p>
+            <div class="flex items-center gap-2">
+              <span class="font-label text-xs uppercase tracking-widest" :class="tier.isMalus ? 'text-error' : 'text-on-surface'">{{ tier.talentName }}</span>
+              <span class="tag" :class="tier.isMalus ? 'error' : ''">{{ tier.die }}</span>
+            </div>
+            <p class="text-on-surface-variant text-xs mt-0.5">{{ tier.description }}</p>
           </div>
 
-          <div v-if="getChosenSpecialization(skill.id as SkillId)" class="specialization">
-            <strong>Specialisation : {{ getChosenSpecialization(skill.id as SkillId)!.name }}</strong>
-            <p>{{ getChosenSpecialization(skill.id as SkillId)!.description }}</p>
+          <div v-if="getChosenSpecialization(skill.id as SkillId)" class="bg-primary-container border border-primary-container p-2 mt-2">
+            <strong class="text-on-primary-container text-xs font-label uppercase tracking-widest">Specialisation : {{ getChosenSpecialization(skill.id as SkillId)!.name }}</strong>
+            <p class="text-on-primary-container text-xs mt-1 opacity-80">{{ getChosenSpecialization(skill.id as SkillId)!.description }}</p>
           </div>
         </div>
       </div>
     </section>
   </div>
 
-  <div v-else>
-    <p>Personnage introuvable.</p>
-    <router-link to="/">Retour</router-link>
+  <div v-else class="min-h-dvh bg-background px-4 py-6 max-w-2xl mx-auto">
+    <p class="text-on-surface-variant">Personnage introuvable.</p>
+    <router-link to="/" class="text-secondary text-xs font-label uppercase tracking-widest">Retour</router-link>
   </div>
 </template>

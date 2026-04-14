@@ -1,0 +1,225 @@
+@import "tailwindcss";
+
+/* === CONTAGION DESIGN SYSTEM === */
+/* Derived from Stitch project: Gestionnaire Personnage Contagion */
+
+/* --- Custom Theme --- */
+@theme {
+  /* Colors - Surface */
+  --color-surface: #111316;
+  --color-surface-dim: #111316;
+  --color-surface-bright: #37393d;
+  --color-surface-container-lowest: #0c0e11;
+  --color-surface-container-low: #1a1c1f;
+  --color-surface-container: #1e2023;
+  --color-surface-container-high: #282a2d;
+  --color-surface-container-highest: #333538;
+  --color-surface-variant: #333538;
+  --color-surface-tint: #ffb4a8;
+  --color-background: #111316;
+  --color-on-background: #e2e2e6;
+  --color-on-surface: #e2e2e6;
+  --color-on-surface-variant: #c6c6cb;
+
+  /* Colors - Primary (red/orange) */
+  --color-primary: #ffb4a8;
+  --color-primary-container: #620000;
+  --color-primary-fixed: #ffdad4;
+  --color-primary-fixed-dim: #ffb4a8;
+  --color-on-primary: #690000;
+  --color-on-primary-container: #ff5e49;
+  --color-on-primary-fixed: #410000;
+  --color-on-primary-fixed-variant: #920703;
+  --color-inverse-primary: #b52619;
+
+  /* Colors - Secondary (blue) */
+  --color-secondary: #96ccff;
+  --color-secondary-container: #025483;
+  --color-secondary-fixed: #cee5ff;
+  --color-secondary-fixed-dim: #96ccff;
+  --color-on-secondary: #003353;
+  --color-on-secondary-container: #8ec8fe;
+  --color-on-secondary-fixed: #001d32;
+  --color-on-secondary-fixed-variant: #004a75;
+
+  /* Colors - Tertiary (teal) */
+  --color-tertiary: #adcbda;
+  --color-tertiary-container: #11303c;
+  --color-on-tertiary: #163440;
+  --color-on-tertiary-container: #7b98a7;
+
+  /* Colors - Error */
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+  --color-on-error: #690005;
+  --color-on-error-container: #ffdad6;
+
+  /* Colors - Outline */
+  --color-outline: #909095;
+  --color-outline-variant: #45474a;
+
+  /* Colors - Inverse */
+  --color-inverse-surface: #e2e2e6;
+  --color-inverse-on-surface: #2f3034;
+
+  /* Fonts */
+  --font-headline: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-label: "Work Sans", sans-serif;
+}
+
+/* --- Global Styles --- */
+body {
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  font-family: var(--font-body);
+  min-height: 100dvh;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-headline);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+h1 { font-size: 1.5rem; font-weight: 700; }
+h2 { font-size: 1.125rem; font-weight: 600; color: var(--color-on-surface-variant); }
+h3 { font-size: 0.875rem; font-weight: 500; }
+
+/* Labels */
+label, .label {
+  font-family: var(--font-label);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-on-surface-variant);
+}
+
+/* Links */
+a {
+  color: var(--color-secondary);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--color-secondary-fixed);
+}
+
+/* Buttons */
+button, .btn {
+  font-family: var(--font-label);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.75rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-outline-variant);
+  background: var(--color-surface-container);
+  color: var(--color-on-surface);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+button:hover {
+  background: var(--color-surface-container-high);
+  border-color: var(--color-outline);
+}
+button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+button.primary {
+  background: var(--color-primary-container);
+  color: var(--color-on-primary-container);
+  border-color: var(--color-primary-container);
+}
+button.primary:hover {
+  background: var(--color-on-primary-fixed-variant);
+}
+button.danger {
+  color: var(--color-error);
+  border-color: var(--color-error-container);
+}
+button.danger:hover {
+  background: var(--color-error-container);
+}
+
+/* Inputs */
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-outline-variant);
+  color: var(--color-on-surface);
+  width: 100%;
+}
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+select {
+  appearance: none;
+}
+
+/* Cards / Containers */
+.card {
+  background: var(--color-surface-container);
+  border: 1px solid var(--color-outline-variant);
+  padding: 1rem;
+}
+
+/* Dividers */
+hr, .divider {
+  border: none;
+  border-top: 1px solid var(--color-outline-variant);
+}
+
+/* Stat bars */
+.stat-bar-fill {
+  height: 4px;
+  transition: width 0.3s;
+}
+.stat-bar-fill.hp { background: linear-gradient(90deg, #ffb4a8, #620000); }
+.stat-bar-fill.sanity { background: linear-gradient(90deg, #96ccff, #025483); }
+.stat-bar-fill.souffle { background: linear-gradient(90deg, #adcbda, #11303c); }
+
+/* Tags / Badges */
+.tag {
+  display: inline-block;
+  font-family: var(--font-label);
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.125rem 0.5rem;
+  border: 1px solid var(--color-outline-variant);
+  color: var(--color-on-surface-variant);
+}
+.tag.primary {
+  border-color: var(--color-primary-container);
+  color: var(--color-on-primary-container);
+}
+.tag.secondary {
+  border-color: var(--color-secondary-container);
+  color: var(--color-on-secondary-container);
+}
+.tag.error {
+  border-color: var(--color-error-container);
+  color: var(--color-error);
+}
+
+/* Die display */
+.die-display {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+/* Material Symbols */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+}
