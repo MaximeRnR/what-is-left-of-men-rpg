@@ -15,7 +15,6 @@ const store = useCharacterStore()
 const characterId = route.params.id as string
 const original = computed(() => store.characters.find(c => c.id === characterId))
 
-// Create a deep copy for editing
 const draft = ref<Character>(JSON.parse(JSON.stringify(original.value!)))
 
 const { spentPoints, canAllocate, allocate, deallocate, isValid } =
@@ -33,8 +32,7 @@ function skillsByCategory(category: SkillCategory) {
 
 function getSkillTier(skillId: SkillId) {
   const spent = draft.value.skills[skillId]?.pointsSpent ?? 0
-  const bonus = draft.value.bonusPoints[skillId] ?? 0
-  return computeSkillTier(spent, bonus)
+  return computeSkillTier(spent, 0)
 }
 
 function addPoint(skillId: SkillId) {
@@ -58,27 +56,6 @@ function selectSpecialization(skillId: SkillId, specId: string) {
   draft.value.specializations[skillId] = specId
 }
 
-// MJ bonus points management
-function addBonusPoint(skillId: SkillId) {
-  const current = draft.value.bonusPoints[skillId] ?? 0
-  const totalBonus = Object.values(draft.value.bonusPoints).reduce((sum, v) => sum + (v ?? 0), 0)
-  if (totalBonus >= 5) return
-  draft.value.bonusPoints[skillId] = current + 1
-}
-
-function removeBonusPoint(skillId: SkillId) {
-  const current = draft.value.bonusPoints[skillId] ?? 0
-  if (current <= 0) return
-  draft.value.bonusPoints[skillId] = current - 1
-  if (draft.value.bonusPoints[skillId] === 0) {
-    delete draft.value.bonusPoints[skillId]
-  }
-}
-
-const totalBonusSpent = computed(() => {
-  return Object.values(draft.value.bonusPoints).reduce((sum, v) => sum + (v ?? 0), 0)
-})
-
 const canSave = computed(() => {
   if (!draft.value.name.trim()) return false
   if (!isValid.value) return false
@@ -92,7 +69,6 @@ function save() {
     story: draft.value.story,
     skills: { ...draft.value.skills },
     specializations: { ...draft.value.specializations },
-    bonusPoints: { ...draft.value.bonusPoints },
   })
   router.push(`/character/${characterId}`)
 }
@@ -124,7 +100,7 @@ function cancel() {
       <textarea id="story" v-model="draft.story" rows="4" placeholder="L'histoire de votre personnage..."></textarea>
     </div>
 
-    <div class="bg-surface-container-low border border-outline-variant p-4 mb-4 flex items-center justify-between">
+    <div class="bg-surface-container-low border border-outline-variant p-4 mb-6 flex items-center justify-between">
       <div>
         <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Points investis</p>
         <p class="die-display text-primary">{{ spentPoints }}</p>
@@ -135,23 +111,16 @@ function cancel() {
       </div>
     </div>
 
-    <div class="bg-secondary-container border border-secondary-container p-4 mb-6 flex items-center justify-between">
-      <p class="font-label text-xs uppercase tracking-widest text-on-secondary-container">Bonus MJ</p>
-      <p class="font-headline text-lg text-on-secondary-container">{{ totalBonusSpent }} / 5</p>
-    </div>
-
     <div v-for="cat in categories" :key="cat.key" class="mb-8">
       <h2 class="mb-3 pb-2 border-b border-outline-variant">{{ cat.label }}</h2>
 
       <div v-for="skill in skillsByCategory(cat.key)" :key="skill.id" class="bg-surface-container border border-outline-variant p-3 mb-2">
-        <div class="mb-2">
-          <strong class="text-on-surface text-sm">{{ skill.name }}</strong>
-          <em class="text-on-surface-variant text-xs ml-2">{{ skill.latinName }}</em>
-        </div>
-
-        <div class="flex items-center gap-4 mb-2">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <strong class="text-on-surface text-sm">{{ skill.name }}</strong>
+            <em class="text-on-surface-variant text-xs ml-2">{{ skill.latinName }}</em>
+          </div>
           <div class="flex items-center gap-2">
-            <span class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Points :</span>
             <button class="px-2 py-1" @click="removePoint(skill.id as SkillId)" :disabled="(draft.skills[skill.id as SkillId]?.pointsSpent ?? 0) === 0">
               <span class="material-symbols-outlined text-sm">remove</span>
             </button>
@@ -160,24 +129,13 @@ function cancel() {
               <span class="material-symbols-outlined text-sm">add</span>
             </button>
           </div>
-
-          <div class="flex items-center gap-2">
-            <span class="font-label text-xs uppercase tracking-widest text-secondary">Bonus MJ :</span>
-            <button class="px-2 py-1" @click="removeBonusPoint(skill.id as SkillId)" :disabled="(draft.bonusPoints[skill.id as SkillId] ?? 0) === 0">
-              <span class="material-symbols-outlined text-sm">remove</span>
-            </button>
-            <span class="font-headline text-secondary w-6 text-center">{{ draft.bonusPoints[skill.id as SkillId] ?? 0 }}</span>
-            <button class="px-2 py-1" @click="addBonusPoint(skill.id as SkillId)" :disabled="totalBonusSpent >= 5">
-              <span class="material-symbols-outlined text-sm">add</span>
-            </button>
-          </div>
         </div>
 
         <div v-if="getSkillTier(skill.id as SkillId).tier" class="flex items-center gap-2 mt-1">
           <span class="die-display text-lg font-bold" :style="{ color: `var(--color-die-${getSkillTier(skill.id as SkillId).die})` }">{{ getSkillTier(skill.id as SkillId).die }}</span>
           <span class="font-label text-xs uppercase tracking-widest" :style="{ color: `var(--color-die-${getSkillTier(skill.id as SkillId).die})` }">{{ getSkillTier(skill.id as SkillId).tier }}</span>
-          <span v-if="getSkillTier(skill.id as SkillId).totalBonus > 0" class="tag secondary">
-            +{{ getSkillTier(skill.id as SkillId).totalBonus }}
+          <span v-if="getSkillTier(skill.id as SkillId).extraBonus > 0" class="tag secondary">
+            +{{ getSkillTier(skill.id as SkillId).extraBonus }}
           </span>
         </div>
 

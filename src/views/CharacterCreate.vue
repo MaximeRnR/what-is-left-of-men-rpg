@@ -13,9 +13,12 @@ const store = useCharacterStore()
 
 const characterName = ref('')
 const character = ref(createEmptyCharacter('draft', ''))
+const unlimitedMode = ref(false)
 
-const { totalPoints, spentPoints, remainingPoints, canAllocate, allocate, deallocate, isValid } =
-  usePointBudget(character)
+const budgetNormal = usePointBudget(character)
+const budgetUnlimited = usePointBudget(character, { unlimited: true, allowMaster: true })
+
+const budget = computed(() => unlimitedMode.value ? budgetUnlimited : budgetNormal)
 
 const categories: { key: SkillCategory; label: string }[] = [
   { key: 'corps', label: 'CORPS' },
@@ -33,13 +36,13 @@ function getSkillTier(skillId: SkillId) {
 }
 
 function addPoint(skillId: SkillId) {
-  if (canAllocate(skillId, 1)) {
-    allocate(skillId, 1)
+  if (budget.value.canAllocate(skillId, 1)) {
+    budget.value.allocate(skillId, 1)
   }
 }
 
 function removePoint(skillId: SkillId) {
-  deallocate(skillId, 1)
+  budget.value.deallocate(skillId, 1)
 }
 
 function getTierForSkill(skillId: SkillId) {
@@ -55,8 +58,7 @@ function selectSpecialization(skillId: SkillId, specId: string) {
 
 const canSave = computed(() => {
   if (!characterName.value.trim()) return false
-  if (!isValid.value) return false
-  // Check all required specializations are chosen
+  if (!budget.value.isValid.value) return false
   for (const skill of allSkills) {
     const spent = character.value.skills[skill.id as SkillId]?.pointsSpent ?? 0
     const result = computeSkillTier(spent, 0)
@@ -98,16 +100,33 @@ function save() {
       <input id="name" v-model="characterName" type="text" placeholder="Nom du personnage" />
     </div>
 
-    <div class="bg-surface-container-low border border-outline-variant p-4 mb-6 flex items-center justify-between">
-      <div>
-        <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Points depenses</p>
-        <p class="text-on-surface text-sm">{{ spentPoints }} / {{ totalPoints }}</p>
-      </div>
-      <div class="text-right">
-        <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Restants</p>
-        <p class="die-display text-primary">{{ remainingPoints }}</p>
-      </div>
+    <div class="bg-surface-container-low border border-outline-variant p-4 mb-4 flex items-center justify-between">
+      <template v-if="!unlimitedMode">
+        <div>
+          <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Points depenses</p>
+          <p class="text-on-surface text-sm">{{ budget.spentPoints.value }} / {{ budget.totalPoints.value }}</p>
+        </div>
+        <div class="text-right">
+          <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Restants</p>
+          <p class="die-display text-primary">{{ budget.remainingPoints.value }}</p>
+        </div>
+      </template>
+      <template v-else>
+        <div>
+          <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Points investis</p>
+          <p class="die-display text-primary">{{ budget.spentPoints.value }}</p>
+        </div>
+        <div class="text-right">
+          <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Mode</p>
+          <p class="font-label text-xs uppercase tracking-widest text-die-d20">Progression libre</p>
+        </div>
+      </template>
     </div>
+
+    <label class="flex items-center gap-2 mb-6 cursor-pointer">
+      <input type="checkbox" v-model="unlimitedMode" class="w-4 h-4" />
+      <span class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Points infinis</span>
+    </label>
 
     <div v-for="cat in categories" :key="cat.key" class="mb-8">
       <h2 class="mb-3 pb-2 border-b border-outline-variant">{{ cat.label }}</h2>
@@ -123,7 +142,7 @@ function save() {
               <span class="material-symbols-outlined text-sm">remove</span>
             </button>
             <span class="font-headline text-on-surface w-6 text-center">{{ character.skills[skill.id as SkillId]?.pointsSpent ?? 0 }}</span>
-            <button class="px-2 py-1" @click="addPoint(skill.id as SkillId)" :disabled="!canAllocate(skill.id as SkillId, 1)">
+            <button class="px-2 py-1" @click="addPoint(skill.id as SkillId)" :disabled="!budget.canAllocate(skill.id as SkillId, 1)">
               <span class="material-symbols-outlined text-sm">add</span>
             </button>
           </div>
@@ -137,7 +156,6 @@ function save() {
           </span>
         </div>
 
-        <!-- Specialization choice -->
         <div v-if="getTierForSkill(skill.id as SkillId)?.specializations?.length" class="mt-3 pt-3 border-t border-outline-variant">
           <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant mb-2">Specialisation :</p>
           <label
