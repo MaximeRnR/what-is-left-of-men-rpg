@@ -145,7 +145,6 @@ const ROLL_BONUSES: Omit<RollBonus, 'value'>[] = [
   { skillId: 'ombre', tier: 'initie', conditional: false, label: 'Jets d\'Ombre' },
   { skillId: 'ombre', tier: 'entraine', conditional: true, label: 'Touche EMBUSQUE (COURTE/POING)' },
   // COEUR
-  { skillId: 'charisme', tier: 'initie', conditional: false, label: 'Jets de COEUR' },
   { skillId: 'empathie', tier: 'initie', conditional: false, label: 'Jets d\'Empathie' },
   { skillId: 'courage', tier: 'initie', conditional: true, label: 'COURAGE vs Trait choisi' },
   { skillId: 'courage', tier: 'entraine', conditional: true, label: 'Prochain jet allie (1x/Scene)' },
