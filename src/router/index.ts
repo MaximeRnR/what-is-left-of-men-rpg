@@ -31,6 +31,12 @@ const router = createRouter({
       component: () => import('../views/CharacterInventory.vue'),
       props: true,
     },
+    {
+      path: '/character/:id/tracker',
+      name: 'character-tracker',
+      component: () => import('../views/CharacterTracker.vue'),
+      props: true,
+    },
   ],
 })
 
