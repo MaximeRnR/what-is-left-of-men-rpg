@@ -5,12 +5,13 @@ import { ALL_SKILL_IDS, TIER_CUMULATIVE_COST } from '../models/skill'
 
 interface PointBudgetOptions {
   allowMaster?: boolean
+  unlimited?: boolean
 }
 
 export function usePointBudget(character: Ref<Character>, options: PointBudgetOptions = {}) {
-  const { allowMaster = false } = options
+  const { allowMaster = false, unlimited = false } = options
 
-  const totalPoints = computed(() => 15)
+  const totalPoints = computed(() => unlimited ? Infinity : 15)
 
   const spentPoints = computed(() => {
     return ALL_SKILL_IDS.reduce((sum, id) => {
@@ -18,13 +19,13 @@ export function usePointBudget(character: Ref<Character>, options: PointBudgetOp
     }, 0)
   })
 
-  const remainingPoints = computed(() => totalPoints.value - spentPoints.value)
+  const remainingPoints = computed(() => unlimited ? Infinity : totalPoints.value - spentPoints.value)
 
   function canAllocate(skillId: SkillId, points: number): boolean {
     const current = character.value.skills[skillId]?.pointsSpent ?? 0
     const newTotal = current + points
 
-    if (points > remainingPoints.value) return false
+    if (!unlimited && points > remainingPoints.value) return false
     if (!allowMaster && newTotal >= TIER_CUMULATIVE_COST.maitre) return false
 
     return true
@@ -43,7 +44,7 @@ export function usePointBudget(character: Ref<Character>, options: PointBudgetOp
   }
 
   const isValid = computed(() => {
-    if (spentPoints.value > totalPoints.value) return false
+    if (!unlimited && spentPoints.value > totalPoints.value) return false
     if (!allowMaster) {
       for (const id of ALL_SKILL_IDS) {
         const spent = character.value.skills[id]?.pointsSpent ?? 0

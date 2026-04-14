@@ -19,8 +19,8 @@ const original = computed(() => store.characters.find(c => c.id === characterId)
 // Create a deep copy for editing
 const draft = ref<Character>(JSON.parse(JSON.stringify(original.value!)))
 
-const { totalPoints, spentPoints, remainingPoints, canAllocate, allocate, deallocate, isValid } =
-  usePointBudget(draft)
+const { spentPoints, canAllocate, allocate, deallocate, isValid } =
+  usePointBudget(draft, { unlimited: true, allowMaster: true })
 
 const categories: { key: SkillCategory; label: string }[] = [
   { key: 'corps', label: 'CORPS' },
@@ -127,12 +127,12 @@ function cancel() {
 
     <div class="bg-surface-container-low border border-outline-variant p-4 mb-4 flex items-center justify-between">
       <div>
-        <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Points depenses</p>
-        <p class="text-on-surface text-sm">{{ spentPoints }} / {{ totalPoints }}</p>
+        <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Points investis</p>
+        <p class="die-display text-primary">{{ spentPoints }}</p>
       </div>
       <div class="text-right">
-        <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Restants</p>
-        <p class="die-display text-primary">{{ remainingPoints }}</p>
+        <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Mode</p>
+        <p class="font-label text-xs uppercase tracking-widest text-die-d20">Progression libre</p>
       </div>
     </div>
 
