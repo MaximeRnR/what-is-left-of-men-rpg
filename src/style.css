@@ -185,6 +185,12 @@ hr, .divider {
   border-top: 1px solid var(--color-outline-variant);
 }
 
+/* Talent highlight animation */
+.highlight-talent {
+  background-color: var(--color-surface-container-highest) !important;
+  outline: 1px solid var(--color-die-d20);
+}
+
 /* Stat bars */
 .stat-bar-fill {
   height: 4px;

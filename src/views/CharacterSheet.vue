@@ -125,6 +125,91 @@ function detectTags(description: string): { label: string, color: string }[] {
   return tags
 }
 
+// Roll bonus definitions: skill + tier -> bonus to dice rolls
+interface RollBonus {
+  skillId: SkillId
+  tier: string         // tier level
+  specId?: string      // if from a specialization
+  value: string        // "+1", "+2", dynamic
+  conditional: boolean // true = asterisk
+  label: string        // short description
+}
+
+const ROLL_BONUSES: Omit<RollBonus, 'value'>[] = [
+  // CORPS
+  { skillId: 'archerie', tier: 'competent', specId: 'tireur_precis', conditional: true, label: 'Tirs Moy./Longue Portee' },
+  { skillId: 'archerie', tier: 'competent', specId: 'tireur_rapide', conditional: true, label: 'Tirs Courte Portee' },
+  { skillId: 'force', tier: 'initie', conditional: true, label: 'Porter, soulever, pousser' },
+  { skillId: 'force', tier: 'competent', specId: 'praetor', conditional: true, label: 'Toucher armes LOURDE' },
+  { skillId: 'agilite', tier: 'initie', conditional: false, label: 'Jets d\'Agilite' },
+  { skillId: 'ombre', tier: 'initie', conditional: false, label: 'Jets d\'Ombre' },
+  { skillId: 'ombre', tier: 'entraine', conditional: true, label: 'Touche EMBUSQUE (COURTE/POING)' },
+  // COEUR
+  { skillId: 'charisme', tier: 'initie', conditional: false, label: 'Jets de COEUR' },
+  { skillId: 'empathie', tier: 'initie', conditional: false, label: 'Jets d\'Empathie' },
+  { skillId: 'courage', tier: 'initie', conditional: true, label: 'COURAGE vs Trait choisi' },
+  { skillId: 'courage', tier: 'entraine', conditional: true, label: 'Prochain jet allie (1x/Scene)' },
+  { skillId: 'courage', tier: 'legende', conditional: true, label: 'COURAGE allies a portee' },
+  { skillId: 'perception', tier: 'initie', conditional: false, label: 'Jets de Perception' },
+  { skillId: 'perception', tier: 'entraine', conditional: false, label: 'Initiative' },
+  { skillId: 'perception', tier: 'competent', conditional: true, label: 'Toucher cible designee' },
+  { skillId: 'tromperie', tier: 'entraine', conditional: true, label: 'Jets TROMPERIE (par Charisme)' },
+  // ESPRIT
+  { skillId: 'instinct', tier: 'initie', conditional: false, label: 'Initiative' },
+  { skillId: 'creativite', tier: 'competent', conditional: true, label: 'Resultat (AUGURE, 1x/Scene)' },
+  { skillId: 'connaissance', tier: 'initie', conditional: true, label: 'Domaine de savoir choisi' },
+  { skillId: 'connaissance', tier: 'competent', conditional: true, label: '2e domaine de savoir' },
+  { skillId: 'connaissance', tier: 'legende', conditional: true, label: '3e domaine (+2 sur domaines)' },
+  { skillId: 'investigation', tier: 'entraine', conditional: true, label: 'Via PALACE MENTAL' },
+  { skillId: 'investigation', tier: 'maitre', conditional: true, label: 'Jet ESPRIT allie (1x/Scene)' },
+  { skillId: 'occultisme', tier: 'legende', conditional: true, label: 'Objets OCCULTE/AUTRE MONDE' },
+  { skillId: 'medecine', tier: 'entraine', conditional: true, label: 'Jets d\'Agonie allie' },
+]
+
+function getRollBonusesForSkill(skillId: SkillId): (RollBonus & { anchorId: string })[] {
+  if (!character.value) return []
+  const info = getSkillInfo(skillId)
+  if (!info?.tier) return []
+
+  const tierOrder = ['incompetent', 'initie', 'entraine', 'competent', 'maitre', 'legende']
+  const currentIndex = tierOrder.indexOf(info.tier)
+
+  const results: (RollBonus & { anchorId: string })[] = []
+
+  for (const def of ROLL_BONUSES) {
+    if (def.skillId !== skillId) continue
+    const defIndex = tierOrder.indexOf(def.tier)
+    if (defIndex > currentIndex) continue
+
+    // Check specialization match if required
+    if (def.specId && character.value.specializations[skillId] !== def.specId) continue
+
+    // Compute value
+    let value = '+1'
+    if (def.skillId === 'tromperie' && def.tier === 'entraine') {
+      const bonus = Math.min(getSkillTierIndex('charisme'), 3)
+      if (bonus === 0) continue
+      value = `+${bonus}`
+    }
+    if (def.skillId === 'connaissance' && def.tier === 'legende') {
+      value = '+2'
+    }
+
+    const anchorId = `talent-${skillId}-${def.tier}${def.specId ? '-' + def.specId : ''}`
+    results.push({ ...def, value, anchorId })
+  }
+
+  return results
+}
+
+function scrollToTalent(anchorId: string) {
+  const el = document.getElementById(anchorId)
+  if (!el) return
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  el.classList.add('highlight-talent')
+  setTimeout(() => el.classList.remove('highlight-talent'), 2000)
+}
+
 function goToEdit() {
   router.push(`/character/${characterId}/edit`)
 }
@@ -214,6 +299,14 @@ function goToEdit() {
               <span v-if="getSkillInfo(skill.id as SkillId)!.totalBonus > 0" class="die-display text-lg font-bold" :class="dieColorClass[getSkillInfo(skill.id as SkillId)!.die!] ?? ''">
                 +{{ getSkillInfo(skill.id as SkillId)!.totalBonus }}
               </span>
+              <span
+                v-for="rb in getRollBonusesForSkill(skill.id as SkillId)"
+                :key="rb.anchorId"
+                class="tag cursor-pointer hover:opacity-80 transition-opacity"
+                style="border-color: var(--color-die-d20); color: var(--color-die-d20);"
+                :title="rb.label"
+                @click="scrollToTalent(rb.anchorId)"
+              >{{ rb.value }}{{ rb.conditional ? '*' : '' }}</span>
             </template>
             <span v-else class="text-on-surface-variant text-xs">—</span>
           </div>
@@ -223,7 +316,8 @@ function goToEdit() {
           <div
             v-for="tier in getVisibleTalentsForSkill(skill.id as SkillId)"
             :key="tier.level"
-            class="mb-3"
+            :id="`talent-${skill.id}-${tier.level}`"
+            class="mb-3 transition-colors duration-500"
           >
             <div class="flex items-center gap-2 flex-wrap">
               <span class="font-label text-xs uppercase tracking-widest" :class="dieColorClass[tier.die] ?? 'text-on-surface'">{{ tier.talentName }}</span>
@@ -234,7 +328,11 @@ function goToEdit() {
             <p class="text-on-surface-variant text-xs mt-1">{{ tier.description }}</p>
           </div>
 
-          <div v-if="getChosenSpecialization(skill.id as SkillId)" class="bg-primary-container border border-primary-container p-2 mt-2">
+          <div
+            v-if="getChosenSpecialization(skill.id as SkillId)"
+            :id="`talent-${skill.id}-competent-${character.specializations[skill.id as SkillId]}`"
+            class="bg-primary-container border border-primary-container p-2 mt-2 transition-colors duration-500"
+          >
             <strong class="text-on-primary-container text-xs font-label uppercase tracking-widest">Specialisation : {{ getChosenSpecialization(skill.id as SkillId)!.name }}</strong>
             <p class="text-on-primary-container text-xs mt-1 opacity-80">{{ getChosenSpecialization(skill.id as SkillId)!.description }}</p>
           </div>
