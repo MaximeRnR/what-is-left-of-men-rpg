@@ -43,13 +43,12 @@ function getVisibleTalentsForSkill(skillId: SkillId) {
   const spent = character.value.skills[skillId]?.pointsSpent ?? 0
   const bonus = character.value.bonusPoints[skillId] ?? 0
   const totalPoints = spent + bonus
-  if (totalPoints === 0) return []
 
   const skillDef = allSkills.find(s => s.id === skillId)
   if (!skillDef) return []
 
   const unlocked = skillDef.tiers.filter(t => t.costToReach <= totalPoints)
-  // Hide incompetent malus talents once the skill has surpassed that tier
+  // Show incompetent malus ONLY when still at incompetent tier, hide once surpassed
   if (unlocked.length > 1) {
     return unlocked.filter(t => !t.isMalus)
   }
