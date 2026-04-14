@@ -23,7 +23,7 @@ function selectCharacter(id: string) {
   <div class="min-h-dvh bg-background px-4 py-6 max-w-2xl mx-auto">
     <header class="mb-8">
       <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant mb-1">CONTAGION_OS</p>
-      <h1 class="font-headline text-2xl uppercase tracking-wider text-on-surface">Operatives</h1>
+      <h1 class="font-headline text-2xl uppercase tracking-wider text-on-surface">Personnages</h1>
       <div class="border-t border-outline-variant mt-3"></div>
     </header>
 
