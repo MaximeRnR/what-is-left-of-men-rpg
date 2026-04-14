@@ -37,6 +37,12 @@ const router = createRouter({
       component: () => import('../views/CharacterTracker.vue'),
       props: true,
     },
+    {
+      path: '/character/:id/abilities',
+      name: 'character-abilities',
+      component: () => import('../views/CharacterAbilities.vue'),
+      props: true,
+    },
   ],
 })
 

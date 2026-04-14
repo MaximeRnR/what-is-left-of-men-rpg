@@ -240,6 +240,9 @@ function goToEdit() {
         <router-link :to="`/character/${characterId}/tracker`" class="flex items-center justify-center gap-1 text-secondary text-xs font-label uppercase tracking-widest py-2 border border-outline-variant">
           <span class="material-symbols-outlined text-sm">swords</span> Combat
         </router-link>
+        <router-link :to="`/character/${characterId}/abilities`" class="flex items-center justify-center gap-1 text-secondary text-xs font-label uppercase tracking-widest py-2 border border-outline-variant">
+          <span class="material-symbols-outlined text-sm">auto_awesome</span> Capacites
+        </router-link>
       </div>
       <div class="border-t border-outline-variant mt-3"></div>
     </header>

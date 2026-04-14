@@ -15,6 +15,12 @@ export interface InventoryItem {
   currentFragility: number
 }
 
+export interface Ability {
+  id: string
+  title: string
+  description: string
+}
+
 export interface CombatTracker {
   currentHP: number
   currentSanity: number
@@ -30,6 +36,7 @@ export interface Character {
   specializations: Partial<Record<SkillId, string>>
   bonusPoints: Partial<Record<SkillId, number>>
   inventory: InventoryItem[]
+  abilities: Ability[]
   tracker: CombatTracker
   createdAt: number
   updatedAt: number
@@ -55,6 +62,7 @@ export function createEmptyCharacter(id: string, name: string): Character {
     specializations: {},
     bonusPoints: {},
     inventory: [],
+    abilities: [],
     tracker: {
       currentHP: 10,
       currentSanity: 10,
