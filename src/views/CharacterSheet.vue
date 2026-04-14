@@ -110,16 +110,16 @@ function goToEdit() {
         </div>
       </div>
       <div class="grid grid-cols-2 gap-2">
-        <router-link to="/" class="inline-flex items-center gap-1 text-secondary text-xs font-label uppercase tracking-widest">
+        <router-link to="/" class="flex items-center justify-center gap-1 text-secondary text-xs font-label uppercase tracking-widest py-2 border border-outline-variant">
           <span class="material-symbols-outlined text-sm">arrow_back</span> Retour
         </router-link>
-        <button @click="goToEdit" class="inline-flex items-center gap-1">
+        <button @click="goToEdit" class="flex items-center justify-center gap-1">
           <span class="material-symbols-outlined text-sm">edit</span> Modifier
         </button>
-        <router-link :to="`/character/${characterId}/inventory`" class="inline-flex items-center gap-1 text-secondary text-xs font-label uppercase tracking-widest">
+        <router-link :to="`/character/${characterId}/inventory`" class="flex items-center justify-center gap-1 text-secondary text-xs font-label uppercase tracking-widest py-2 border border-outline-variant">
           <span class="material-symbols-outlined text-sm">inventory_2</span> Inventaire
         </router-link>
-        <router-link :to="`/character/${characterId}/tracker`" class="inline-flex items-center gap-1 text-secondary text-xs font-label uppercase tracking-widest">
+        <router-link :to="`/character/${characterId}/tracker`" class="flex items-center justify-center gap-1 text-secondary text-xs font-label uppercase tracking-widest py-2 border border-outline-variant">
           <span class="material-symbols-outlined text-sm">swords</span> Combat
         </router-link>
       </div>
