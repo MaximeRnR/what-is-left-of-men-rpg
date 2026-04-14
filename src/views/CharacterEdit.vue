@@ -7,7 +7,6 @@ import { computeSkillTier } from '../composables/useSkillCalculator'
 import { allSkills } from '../data/skills'
 import type { SkillId, SkillCategory } from '../models/skill'
 import type { Character } from '../models/character'
-import DieIcon from '../components/DieIcon.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -175,8 +174,7 @@ function cancel() {
         </div>
 
         <div v-if="getSkillTier(skill.id as SkillId).tier" class="flex items-center gap-2 mt-1">
-          <DieIcon :die="getSkillTier(skill.id as SkillId).die!" :size="28" />
-          <span class="die-display text-lg" :style="{ color: `var(--color-die-${getSkillTier(skill.id as SkillId).die})` }">{{ getSkillTier(skill.id as SkillId).die }}</span>
+          <span class="die-display text-lg font-bold" :style="{ color: `var(--color-die-${getSkillTier(skill.id as SkillId).die})` }">{{ getSkillTier(skill.id as SkillId).die }}</span>
           <span class="font-label text-xs uppercase tracking-widest" :style="{ color: `var(--color-die-${getSkillTier(skill.id as SkillId).die})` }">{{ getSkillTier(skill.id as SkillId).tier }}</span>
           <span v-if="getSkillTier(skill.id as SkillId).totalBonus > 0" class="tag secondary">
             +{{ getSkillTier(skill.id as SkillId).totalBonus }}

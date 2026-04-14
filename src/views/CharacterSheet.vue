@@ -6,7 +6,6 @@ import { useCharacterStats } from '../composables/useCharacterStats'
 import { computeSkillTier } from '../composables/useSkillCalculator'
 import { allSkills } from '../data/skills'
 import type { SkillId, SkillCategory } from '../models/skill'
-import DieIcon from '../components/DieIcon.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -145,30 +144,23 @@ function goToEdit() {
       <h2 class="mb-3 pb-2 border-b border-outline-variant">{{ cat.label }}</h2>
 
       <div v-for="skill in skillsByCategory(cat.key)" :key="skill.id" class="bg-surface-container border border-outline-variant p-3 mb-2">
-        <!-- Skill header: name + die icon -->
         <div class="flex items-center justify-between">
           <div>
             <strong class="text-on-surface text-sm">{{ skill.name }}</strong>
             <em class="text-on-surface-variant text-xs ml-2">{{ skill.latinName }}</em>
           </div>
-          <div v-if="getSkillInfo(skill.id as SkillId)?.tier" class="flex items-center gap-2">
-            <DieIcon :die="getSkillInfo(skill.id as SkillId)!.die!" :size="24" />
-            <span class="die-display text-lg" :class="dieColorClass[getSkillInfo(skill.id as SkillId)!.die!] ?? ''">{{ getSkillInfo(skill.id as SkillId)!.die }}</span>
-            <span v-if="getSkillInfo(skill.id as SkillId)!.totalBonus > 0" class="tag secondary">
-              +{{ getSkillInfo(skill.id as SkillId)!.totalBonus }}
-            </span>
+          <div class="flex items-center gap-2">
+            <template v-if="getSkillInfo(skill.id as SkillId)?.tier">
+              <span class="die-display text-lg font-bold" :class="dieColorClass[getSkillInfo(skill.id as SkillId)!.die!] ?? ''">{{ getSkillInfo(skill.id as SkillId)!.die }}</span>
+              <span class="tag" :style="{ borderColor: `var(--color-die-${getSkillInfo(skill.id as SkillId)!.die})`, color: `var(--color-die-${getSkillInfo(skill.id as SkillId)!.die})` }">{{ getSkillInfo(skill.id as SkillId)!.tier }}</span>
+              <span v-if="getSkillInfo(skill.id as SkillId)!.totalBonus > 0" class="tag secondary">
+                +{{ getSkillInfo(skill.id as SkillId)!.totalBonus }}
+              </span>
+            </template>
+            <span v-else class="text-on-surface-variant text-xs">—</span>
           </div>
-          <span v-else class="text-on-surface-variant text-xs">—</span>
         </div>
 
-        <!-- Skill tier level in body -->
-        <div v-if="getSkillInfo(skill.id as SkillId)?.tier" class="mt-2 mb-2">
-          <span class="font-label text-xs uppercase tracking-widest" :class="dieColorClass[getSkillInfo(skill.id as SkillId)!.die!] ?? 'text-on-surface-variant'">
-            {{ getSkillInfo(skill.id as SkillId)!.tier }}
-          </span>
-        </div>
-
-        <!-- Unlocked talents (malus hidden once surpassed) -->
         <div v-if="getVisibleTalentsForSkill(skill.id as SkillId).length > 0" class="mt-2 pt-2 border-t border-outline-variant">
           <div
             v-for="tier in getVisibleTalentsForSkill(skill.id as SkillId)"
@@ -176,11 +168,10 @@ function goToEdit() {
             class="mb-3"
           >
             <div class="flex items-center gap-2">
-              <DieIcon :die="tier.die" :size="16" />
               <span class="font-label text-xs uppercase tracking-widest" :class="dieColorClass[tier.die] ?? 'text-on-surface'">{{ tier.talentName }}</span>
               <span class="tag" :style="{ borderColor: `var(--color-die-${tier.die})`, color: `var(--color-die-${tier.die})` }">{{ tier.die }}</span>
             </div>
-            <p class="text-on-surface-variant text-xs mt-1 ml-6">{{ tier.description }}</p>
+            <p class="text-on-surface-variant text-xs mt-1">{{ tier.description }}</p>
           </div>
 
           <div v-if="getChosenSpecialization(skill.id as SkillId)" class="bg-primary-container border border-primary-container p-2 mt-2">
