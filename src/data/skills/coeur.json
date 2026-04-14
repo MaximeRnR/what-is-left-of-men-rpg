@@ -1,0 +1,406 @@
+[
+  {
+    "id": "charisme",
+    "name": "Charisme",
+    "latinName": "Praesentia",
+    "category": "coeur",
+    "tiers": [
+      {
+        "level": "incompetent",
+        "die": "d4",
+        "costToReach": 1,
+        "talentName": "Presence effacee",
+        "description": "Vous avez -1 a tous les jets sociaux de COEUR face a des inconnus. Lorsque vous subissez une intimidation, une provocation ou une humiliation publique, perdez 1 PSM. Vous etes plus facilement ignore : le MJ peut detourner le Focus narratif de vous mais vous etes aussi moins facilement le Focus de vos adversaires.",
+        "isMalus": true,
+        "passiveEffects": []
+      },
+      {
+        "level": "initie",
+        "die": "d6",
+        "costToReach": 2,
+        "talentName": "Voix posee",
+        "description": "+1 aux jets de COEUR pour convaincre, rassurer ou calmer une situation tendue. Une fois par Scene, vous pouvez empecher une escalade immediate (violence, panique, rupture de negociation) sur un jet de Charisme Simple.",
+        "isMalus": false,
+        "passiveEffects": []
+      },
+      {
+        "level": "entraine",
+        "die": "d8",
+        "costToReach": 4,
+        "talentName": "Autorite naturelle",
+        "description": "1 Relance de jet de COEUR par Scene. Lorsque vous prenez la parole dans un groupe, vous pouvez imposer le rythme : le premier jet de COEUR en opposition contre vous a -1.",
+        "isMalus": false,
+        "passiveEffects": []
+      },
+      {
+        "level": "competent",
+        "die": "d10",
+        "costToReach": 6,
+        "talentName": "Ascendant",
+        "description": "Choisir une specialisation lors de l'acquisition.",
+        "isMalus": false,
+        "passiveEffects": [],
+        "specializations": [
+          {
+            "id": "meneur",
+            "name": "Meneur",
+            "description": "Lorsque vous reussissez un jet de COEUR, un allie qui vous entend ou voit gagne un +1 sur le jet des de son choix pour cette Scene.",
+            "passiveEffects": []
+          },
+          {
+            "id": "manipulateur",
+            "name": "Manipulateur",
+            "description": "Une fois par Scene, si vous reussissez un jet de COEUR, vous pouvez faire agir une cible contre son interet immediat, tant que cela reste plausible narrativement.",
+            "passiveEffects": []
+          }
+        ]
+      },
+      {
+        "level": "maitre",
+        "die": "d12",
+        "costToReach": 10,
+        "talentName": "Presence ecrasante",
+        "description": "+1 ST contre les Humains. Lorsque vous reussissez un jet de COEUR Difficile, vous pouvez infliger l'etat EBRANLE a une cible humaine jusqu'a la fin de la Scene.",
+        "isMalus": false,
+        "passiveEffects": [
+          { "type": "st", "value": 1, "condition": "contre_humains" }
+        ]
+      },
+      {
+        "level": "legende",
+        "die": "d20",
+        "costToReach": 999,
+        "talentName": "Symbole Vivant",
+        "description": "Une fois par Session, vous pouvez redefinir la dynamique emotionnelle d'une Scene. Vous ignorez les malus lies a l'etat DESESPERE. Vos allies a portee peuvent relancer un jet de COEUR rate 1 fois par Scene.",
+        "isMalus": false,
+        "passiveEffects": []
+      }
+    ]
+  },
+  {
+    "id": "empathie",
+    "name": "Empathie",
+    "latinName": "Affectio",
+    "category": "coeur",
+    "tiers": [
+      {
+        "level": "incompetent",
+        "die": "d4",
+        "costToReach": 1,
+        "talentName": "Distance emotionnelle",
+        "description": "Lorsque vous tentez d'AIDER une cible, le CS de l'Aide augmente de +1. En cas d'echec critique sur un jet de COEUR, vous perdez 1 PSM.",
+        "isMalus": true,
+        "passiveEffects": [
+          { "type": "cs_modifier", "value": 1, "condition": "aider" }
+        ]
+      },
+      {
+        "level": "initie",
+        "die": "d6",
+        "costToReach": 2,
+        "talentName": "Ecoute attentive",
+        "description": "+1 aux jets d'Empathie pour ressentir l'etat emotionnel d'une cible, detecter le mensonge ou comprendre une reaction. Une fois par Scene, vous pouvez annuler la perte de 1 PSM subie par un allie que vous soutenez verbalement ou physiquement.",
+        "isMalus": false,
+        "passiveEffects": []
+      },
+      {
+        "level": "entraine",
+        "die": "d8",
+        "costToReach": 4,
+        "talentName": "Soutien sincere",
+        "description": "-1 CS au cout de l'AIDE. Lorsque vous aidez avec succes, la cible peut choisir : soit de relancer son jet, soit de recuperer 1d4 PSM.",
+        "isMalus": false,
+        "passiveEffects": [
+          { "type": "cs_modifier", "value": -1, "condition": "aider" }
+        ]
+      },
+      {
+        "level": "competent",
+        "die": "d10",
+        "costToReach": 6,
+        "talentName": "Ancrage",
+        "description": "+2 PSM. Une fois par Scene, lorsque vous reussissez un jet d'Empathie, vous pouvez retirer un effet negatif MENTAL a une cible consentante.",
+        "isMalus": false,
+        "passiveEffects": [
+          { "type": "sanity", "value": 2 }
+        ]
+      },
+      {
+        "level": "maitre",
+        "die": "d12",
+        "costToReach": 10,
+        "talentName": "Apaisement",
+        "description": "Votre AIDE peut etre relancee 1 fois par Scene. Vous pouvez enlever l'etat DESESPERE d'une cible sur un jet d'Empathie de Difficulte Simple.",
+        "isMalus": false,
+        "passiveEffects": []
+      },
+      {
+        "level": "legende",
+        "die": "d20",
+        "costToReach": 999,
+        "talentName": "Coeur Ouvert",
+        "description": "Une fois par Session, vous pouvez partager votre stabilite emotionnelle, choisissez jusqu'a 3 allies a portee : ils recuperent 1d8 PSM chacun, ils ignorent les malus lies a la peur, au doute ou au desespoir jusqu'a la fin de la Scene.",
+        "isMalus": false,
+        "passiveEffects": []
+      }
+    ]
+  },
+  {
+    "id": "courage",
+    "name": "Courage",
+    "latinName": "Animo",
+    "category": "coeur",
+    "tiers": [
+      {
+        "level": "incompetent",
+        "die": "d4",
+        "costToReach": 1,
+        "talentName": "Volonte Fragile",
+        "description": "En cas d'echec sur vos jets de COURAGE, vous perdez 1 PSM supplementaire.",
+        "isMalus": true,
+        "passiveEffects": []
+      },
+      {
+        "level": "initie",
+        "die": "d6",
+        "costToReach": 2,
+        "talentName": "Rationnel",
+        "description": "Choisissez 1 Trait d'opposants, vous obtenez un +1 aux jets de COURAGE contre eux. Une fois par Scene, vous pouvez reduire de 1 la perte de PSM causee par un effet de peur ou de stress.",
+        "isMalus": false,
+        "passiveEffects": []
+      },
+      {
+        "level": "entraine",
+        "die": "d8",
+        "costToReach": 4,
+        "talentName": "Inspirant",
+        "description": "+1 PSM. Une fois par Scene, lorsque vous reussissez un jet de COURAGE, vous pouvez choisir : soit de donner un bonus de +1 sur son prochain jet, soit de reduire de 1 la perte de PSM subie suite a cet evenement pour vous ou un allie a porte de voix.",
+        "isMalus": false,
+        "passiveEffects": [
+          { "type": "sanity", "value": 1 }
+        ]
+      },
+      {
+        "level": "competent",
+        "die": "d10",
+        "costToReach": 6,
+        "talentName": "Sang-Froid",
+        "description": "+2 PSM. Une fois par Scene, vous pouvez decider de perdre 1d4 PSM pour relancer un Jet de COEUR lie a un contexte narratif de pression, peur ou de tension.",
+        "isMalus": false,
+        "passiveEffects": [
+          { "type": "sanity", "value": 2 }
+        ]
+      },
+      {
+        "level": "maitre",
+        "die": "d12",
+        "costToReach": 10,
+        "talentName": "Refus de ceder",
+        "description": "Une fois par Scene, vous pouvez relancer un Jet de Courage. Tant que vous etes sous l'effet d'un etat MENTAL, vous ne subissez pas de malus sur vos actions offensives ou defensives.",
+        "isMalus": false,
+        "passiveEffects": []
+      },
+      {
+        "level": "legende",
+        "die": "d20",
+        "costToReach": 999,
+        "talentName": "Inebranlable",
+        "description": "Une fois par Session, lorsque vous ou un allie a portee devriez subir un effet MENTAL, vous pouvez l'annuler immediatement. Gagnez un effet positif au choix du MJ et en coherence narrative a la place. Les allies a portee gagnent +1 a leur jets de COURAGE tant qu'ils peuvent vous voir ou vous entendre pour le reste de la scene.",
+        "isMalus": false,
+        "passiveEffects": []
+      }
+    ]
+  },
+  {
+    "id": "perception",
+    "name": "Perception",
+    "latinName": "Sensus",
+    "category": "coeur",
+    "tiers": [
+      {
+        "level": "incompetent",
+        "die": "d4",
+        "costToReach": 1,
+        "talentName": "Vision biaisee",
+        "description": "Lorsque vous ratez un jet de Perception, le MJ peut vous fournir une information partielle ou trompeuse sans vous le signaler. Vous avez -1 a l'Initiative.",
+        "isMalus": true,
+        "passiveEffects": [
+          { "type": "initiative", "value": -1 }
+        ]
+      },
+      {
+        "level": "initie",
+        "die": "d6",
+        "costToReach": 2,
+        "talentName": "Regard affute",
+        "description": "+1 aux jets de Perception pour reperer un danger, une incoherence ou une presence dissimulee. Une fois par Scene, vous pouvez poser une question factuelle au MJ sur l'environnement immediat.",
+        "isMalus": false,
+        "passiveEffects": []
+      },
+      {
+        "level": "entraine",
+        "die": "d8",
+        "costToReach": 4,
+        "talentName": "Lecture du terrain",
+        "description": "+1 a l'Initiative. Au debut d'un combat ou d'une Scene tendue, vous pouvez designer un element de decor ou une position : la premiere action exploitant cet element gagne +1 ou -1 ST (au choix du MJ selon usage).",
+        "isMalus": false,
+        "passiveEffects": [
+          { "type": "initiative", "value": 1 }
+        ]
+      },
+      {
+        "level": "competent",
+        "die": "d10",
+        "costToReach": 6,
+        "talentName": "Cible prioritaire",
+        "description": "+1 pour Toucher une cible que vous avez designe comme menace. Une fois par Scene, lorsque vous touchez cette cible, vous pouvez annuler un bonus defensif circonstanciel.",
+        "isMalus": false,
+        "passiveEffects": []
+      },
+      {
+        "level": "maitre",
+        "die": "d12",
+        "costToReach": 10,
+        "talentName": "Prevoyant",
+        "description": "Une fois par Scene, vous pouvez relancer un jet base sur la vue. Vous ne subissez pas de malus lorsque vous etes surpris.",
+        "isMalus": false,
+        "passiveEffects": []
+      },
+      {
+        "level": "legende",
+        "die": "d20",
+        "costToReach": 999,
+        "talentName": "6eme Sens",
+        "description": "Une fois par Session, vous pouvez declarer une lecture parfaite : vous agissez en premier, quel que soit le resultat d'Initiative, jusqu'a la fin du tour vous ignorez les malus lies a la vue, la premiere attaque ou action hostile contre vous ce tour-ci subit -1, vous pouvez reconstituer ce qui s'est passe dans un lieu recemment tant que des traces existent.",
+        "isMalus": false,
+        "passiveEffects": []
+      }
+    ]
+  },
+  {
+    "id": "tromperie",
+    "name": "Tromperie",
+    "latinName": "Deceptio",
+    "category": "coeur",
+    "tiers": [
+      {
+        "level": "incompetent",
+        "die": "d4",
+        "costToReach": 1,
+        "talentName": "Livre ouvert",
+        "description": "Lorsque vous ratez un jet de Tromperie, la cible comprend que vous tentez de la tromper, meme si elle ne decouvre pas toute la verite. Les jets de COEUR en opposition contre vous gagnent +1 lorsqu'ils servent a detecter vos intentions.",
+        "isMalus": true,
+        "passiveEffects": []
+      },
+      {
+        "level": "initie",
+        "die": "d6",
+        "costToReach": 2,
+        "talentName": "Dissimulation instinctive",
+        "description": "Vous pouvez mentir, omettre ou detourner une question simple sans eveiller immediatement les soupcons. Une fois par Scene, sur un echec de Tromperie, vous pouvez choisir : soit que la cible doute sans vous demasquer, soit que le mensonge tienne mais genere une consequence narrative differee.",
+        "isMalus": false,
+        "passiveEffects": []
+      },
+      {
+        "level": "entraine",
+        "die": "d8",
+        "costToReach": 4,
+        "talentName": "Masque social",
+        "description": "+1 a vos jets de TROMPERIE par Niveau de CHARISME (max +3) si coherent narrativement. Lorsque vous reussissez un jet de Tromperie, la cible subit un -1 a son prochain jet de COEUR lie a cette interaction.",
+        "isMalus": false,
+        "passiveEffects": []
+      },
+      {
+        "level": "competent",
+        "die": "d10",
+        "costToReach": 6,
+        "talentName": "Narration biaisee",
+        "description": "TROMPERIE peut etre utilisee en opposition a EMPATHIE ou PERCEPTION. Une fois par Scene, apres une TROMPERIE reussie, vous pouvez : deplacer le Focus narratif vers un autre personnage ou un autre enjeu, creer une certitude fragile qui ne disparait qu'en cas de preuve flagrante.",
+        "isMalus": false,
+        "passiveEffects": []
+      },
+      {
+        "level": "maitre",
+        "die": "d12",
+        "costToReach": 10,
+        "talentName": "Manipulation froide",
+        "description": "TROMPERIE ne peut jamais etre affectee par des Malus sur des etats MENTAL. Une fois par Scene, lorsque vous reussissez un jet de Tromperie Difficile : la cible peut etre amenee a agir contre son interet immediat si cela reste en coherence narrative, la cible gagne l'etat CONFUS jusqu'a la fin de la Scene.",
+        "isMalus": false,
+        "passiveEffects": []
+      },
+      {
+        "level": "legende",
+        "die": "d20",
+        "costToReach": 999,
+        "talentName": "Maitre des Murmures",
+        "description": "Une fois par Session, vous pouvez instaurer une verite alternative durable : elle affecte un groupe, une organisation ou une situation entiere, elle est consideree comme vraie tant qu'elle n'est pas activement deconstruite, toute tentative de la contredire entraine une resistance sociale ou emotionnelle, toutes les cibles perdent 1d4 PSM. Une fois par Scene vous pouvez remplacer un jet de COEUR rate par un jet de TROMPERIE, en acceptant une consequence narrative ulterieure decidee par le MJ.",
+        "isMalus": false,
+        "passiveEffects": []
+      }
+    ]
+  },
+  {
+    "id": "intimidation",
+    "name": "Intimidation",
+    "latinName": "Metus",
+    "category": "coeur",
+    "tiers": [
+      {
+        "level": "incompetent",
+        "die": "d4",
+        "costToReach": 1,
+        "talentName": "Menace creuse",
+        "description": "Si vous echouez un jet d'INTIMIDATION, votre prochain jet de COEUR subit -1 dans cette interaction.",
+        "isMalus": true,
+        "passiveEffects": []
+      },
+      {
+        "level": "initie",
+        "die": "d6",
+        "costToReach": 2,
+        "talentName": "Regard percant",
+        "description": "Vous pouvez imposer un malaise leger : une cible subit un -1 a ses jets de COEUR dans cette interaction sur un echec de Jet de COURAGE adverse. Une fois par Scene, vous pouvez faire perdre 1 PSM a une cible par la force de votre presence, si cela reste narrativement coherent.",
+        "isMalus": false,
+        "passiveEffects": []
+      },
+      {
+        "level": "entraine",
+        "die": "d8",
+        "costToReach": 4,
+        "talentName": "Pression physique",
+        "description": "Une fois par Scene, au choix une cible : sur un echec de jet de COURAGE, subit -1 a ses jets de Combat au prochain Tour, ou sur un echec de jet de COURAGE, subit -1 a son ST au prochain Tour.",
+        "isMalus": false,
+        "passiveEffects": []
+      },
+      {
+        "level": "competent",
+        "die": "d10",
+        "costToReach": 6,
+        "talentName": "Autorite strategique",
+        "description": "Une fois par Scene, sur un echec de jet de COURAGE adverse, aggravez un effet negatif Mental d'1 si coherent narrativement. Les cibles proches de vous subissent -1 a leurs jets d'ESPRIT.",
+        "isMalus": false,
+        "passiveEffects": []
+      },
+      {
+        "level": "maitre",
+        "die": "d12",
+        "costToReach": 10,
+        "talentName": "Maitre du frisson",
+        "description": "Une fois par Scene, une cible subit EBRANLE ou PEUR sur un echec de jet de COURAGE et subit 1d4 PSM.",
+        "isMalus": false,
+        "passiveEffects": []
+      },
+      {
+        "level": "legende",
+        "die": "d20",
+        "costToReach": 999,
+        "talentName": "Terreur incarnee",
+        "description": "+1 ST. Une fois par Session, vous pouvez transformer la dynamique d'une scene par votre simple presence : les cibles fuient ou se soumettent sur un echec de jet de COURAGE, toute action hostile contre vous subit -1, toutes cibles restantes subissent l'effet PEUR et EBRANLE.",
+        "isMalus": false,
+        "passiveEffects": [
+          { "type": "st", "value": 1 }
+        ]
+      }
+    ]
+  }
+]
