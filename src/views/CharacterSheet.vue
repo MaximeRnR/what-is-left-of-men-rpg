@@ -76,6 +76,7 @@ function goToEdit() {
       <div class="actions">
         <router-link to="/">Retour</router-link>
         <button @click="goToEdit">Modifier</button>
+        <router-link :to="`/character/${characterId}/inventory`">Inventaire</router-link>
       </div>
     </header>
 

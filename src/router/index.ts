@@ -25,6 +25,12 @@ const router = createRouter({
       component: () => import('../views/CharacterEdit.vue'),
       props: true,
     },
+    {
+      path: '/character/:id/inventory',
+      name: 'character-inventory',
+      component: () => import('../views/CharacterInventory.vue'),
+      props: true,
+    },
   ],
 })
 
