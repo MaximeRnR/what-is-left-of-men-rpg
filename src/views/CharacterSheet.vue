@@ -125,19 +125,15 @@ function detectTags(description: string): { label: string, color: string }[] {
   return tags
 }
 
-function getAllTagsForSkill(skillId: SkillId): { label: string, color: string }[] {
+function getHeaderTagsForSkill(skillId: SkillId): { label: string, color: string }[] {
   const talents = getVisibleTalentsForSkill(skillId)
   const seen = new Set<string>()
   const all: { label: string, color: string }[] = []
 
   for (const tier of talents) {
-    if (hasReroll(tier.description)) {
-      if (!seen.has('RELANCE')) {
-        all.push({ label: 'RELANCE', color: 'var(--color-die-d20)' })
-        seen.add('RELANCE')
-      }
-    }
     for (const t of detectTags(tier.description)) {
+      // Only keep +X bonus tags in the header
+      if (!t.label.startsWith('+')) continue
       if (!seen.has(t.label)) {
         all.push(t)
         seen.add(t.label)
@@ -237,7 +233,7 @@ function goToEdit() {
               <span v-if="getSkillInfo(skill.id as SkillId)!.totalBonus > 0" class="tag secondary">
                 +{{ getSkillInfo(skill.id as SkillId)!.totalBonus }}
               </span>
-              <span v-for="t in getAllTagsForSkill(skill.id as SkillId)" :key="t.label" class="tag" :style="{ borderColor: t.color, color: t.color }">{{ t.label }}</span>
+              <span v-for="t in getHeaderTagsForSkill(skill.id as SkillId)" :key="t.label" class="tag" :style="{ borderColor: t.color, color: t.color }">{{ t.label }}</span>
             </template>
             <span v-else class="text-on-surface-variant text-xs">—</span>
           </div>
