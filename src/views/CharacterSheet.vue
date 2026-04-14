@@ -100,12 +100,12 @@ function goToEdit() {
       <div class="flex items-center gap-3 mb-3">
         <h1 class="font-headline text-2xl uppercase tracking-wider text-on-surface">{{ character.name }}</h1>
         <div class="flex-1 relative">
-          <span class="material-symbols-outlined text-sm absolute left-2 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+          <span class="material-symbols-outlined text-base absolute left-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">search</span>
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Filtrer competences..."
-            class="pl-8 py-1.5 text-xs w-full"
+            placeholder="Filtrer..."
+            class="pl-10 py-1.5 text-xs w-full"
           />
         </div>
       </div>
