@@ -13,6 +13,18 @@ const router = createRouter({
       name: 'character-create',
       component: () => import('../views/CharacterCreate.vue'),
     },
+    {
+      path: '/character/:id',
+      name: 'character-sheet',
+      component: () => import('../views/CharacterSheet.vue'),
+      props: true,
+    },
+    {
+      path: '/character/:id/edit',
+      name: 'character-edit',
+      component: () => import('../views/CharacterEdit.vue'),
+      props: true,
+    },
   ],
 })
 
