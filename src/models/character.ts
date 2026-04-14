@@ -1,4 +1,5 @@
 import type { SkillId } from './skill'
+import type { WeaponDefinition } from './weapon'
 
 export interface SkillAllocation {
   pointsSpent: number
@@ -7,6 +8,7 @@ export interface SkillAllocation {
 export interface InventoryItem {
   id: string
   weaponId?: string
+  customWeapon?: WeaponDefinition
   customName?: string
   customDescription?: string
   traits: string[]

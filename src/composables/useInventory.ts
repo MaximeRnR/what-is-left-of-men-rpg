@@ -1,5 +1,6 @@
 import { computed, type Ref } from 'vue'
 import type { Character, InventoryItem } from '../models/character'
+import type { WeaponDefinition } from '../models/weapon'
 import { getWeaponById } from '../data/weapons'
 
 export function useInventory(character: Ref<Character>) {
@@ -12,6 +13,18 @@ export function useInventory(character: Ref<Character>) {
     const item: InventoryItem = {
       id: crypto.randomUUID(),
       weaponId,
+      traits: [],
+      currentFragility: weapon.fragility,
+    }
+    character.value.inventory.push(item)
+    character.value.updatedAt = Date.now()
+  }
+
+  function addCustomWeapon(weapon: Omit<WeaponDefinition, 'id'>): void {
+    const id = crypto.randomUUID()
+    const item: InventoryItem = {
+      id,
+      customWeapon: { ...weapon, id: `custom_${id}` },
       traits: [],
       currentFragility: weapon.fragility,
     }
@@ -62,6 +75,7 @@ export function useInventory(character: Ref<Character>) {
   return {
     items,
     addWeapon,
+    addCustomWeapon,
     addCustomItem,
     removeItem,
     updateFragility,

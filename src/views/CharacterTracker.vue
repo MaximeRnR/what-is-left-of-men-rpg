@@ -82,8 +82,7 @@ const attacks = computed((): AttackInfo[] => {
   const results: AttackInfo[] = []
 
   for (const item of character.value.inventory) {
-    if (!item.weaponId) continue
-    const weapon = getWeaponById(item.weaponId)
+    const weapon = item.customWeapon ?? (item.weaponId ? getWeaponById(item.weaponId) : null)
     if (!weapon) continue
 
     const isRanged = weapon.ranged

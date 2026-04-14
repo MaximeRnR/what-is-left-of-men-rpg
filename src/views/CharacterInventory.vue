@@ -16,7 +16,7 @@ const character = computed(() => store.characters.find(c => c.id === characterId
 const characterRef = ref(character.value!)
 watch(character, (val) => { if (val) characterRef.value = val }, { deep: true })
 
-const { items, addWeapon, addCustomItem, removeItem, updateFragility, addTrait, removeTrait } =
+const { items, addWeapon, addCustomWeapon, addCustomItem, removeItem, updateFragility, addTrait, removeTrait } =
   useInventory(characterRef)
 
 // Weapon selector
@@ -66,6 +66,7 @@ function removeItemTrait(itemId: string, trait: string) {
 }
 
 function getItemName(item: InventoryItem): string {
+  if (item.customWeapon) return item.customWeapon.name
   if (item.customName) return item.customName
   if (item.weaponId) {
     const weapon = getWeaponById(item.weaponId)
@@ -75,8 +76,48 @@ function getItemName(item: InventoryItem): string {
 }
 
 function getItemDetails(item: InventoryItem) {
+  if (item.customWeapon) return item.customWeapon
   if (!item.weaponId) return null
   return getWeaponById(item.weaponId)
+}
+
+// Custom weapon form
+const showWeaponForm = ref(false)
+const cwName = ref('')
+const cwCategory = ref<'legere' | 'moyenne' | 'lourde'>('moyenne')
+const cwDamage = ref('1d6')
+const cwSouffleModifier = ref(0)
+const cwFragility = ref(3)
+const cwQuality = ref<'faible_qualite' | 'standard' | 'chef_doeuvre'>('standard')
+const cwRanged = ref(false)
+const cwEffects = ref('')
+
+function submitCustomWeapon() {
+  if (!cwName.value.trim()) return
+  const effects = cwEffects.value.trim()
+    ? cwEffects.value.split(',').map(e => e.trim()).filter(Boolean)
+    : []
+  addCustomWeapon({
+    name: cwName.value.trim(),
+    category: cwCategory.value,
+    damage: cwDamage.value.trim() || '1d6',
+    souffleModifier: cwSouffleModifier.value,
+    fragility: cwFragility.value,
+    quality: cwQuality.value,
+    ranged: cwRanged.value,
+    specialEffects: effects,
+  })
+  store.updateCharacter(characterId, { inventory: [...characterRef.value.inventory] })
+  // Reset form
+  cwName.value = ''
+  cwCategory.value = 'moyenne'
+  cwDamage.value = '1d6'
+  cwSouffleModifier.value = 0
+  cwFragility.value = 3
+  cwQuality.value = 'standard'
+  cwRanged.value = false
+  cwEffects.value = ''
+  showWeaponForm.value = false
 }
 
 const qualityLabels: Record<string, string> = {
@@ -115,6 +156,68 @@ const qualityLabels: Record<string, string> = {
         </select>
         <button class="primary shrink-0" @click="addSelectedWeapon" :disabled="!selectedWeaponId">
           <span class="material-symbols-outlined text-sm">add</span> Ajouter
+        </button>
+      </div>
+    </section>
+
+    <!-- Create custom weapon -->
+    <section class="mb-6">
+      <div class="flex items-center justify-between">
+        <h2 class="mb-3">Creer une arme</h2>
+        <button class="text-xs" @click="showWeaponForm = !showWeaponForm">
+          <span class="material-symbols-outlined text-sm">{{ showWeaponForm ? 'expand_less' : 'expand_more' }}</span>
+          {{ showWeaponForm ? 'Fermer' : 'Ouvrir' }}
+        </button>
+      </div>
+      <div v-if="showWeaponForm" class="bg-surface-container border border-outline-variant p-4">
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <div class="col-span-2">
+            <label class="block mb-1">Nom</label>
+            <input v-model="cwName" type="text" placeholder="Nom de l'arme" />
+          </div>
+          <div>
+            <label class="block mb-1">Degats</label>
+            <input v-model="cwDamage" type="text" placeholder="1d6" />
+          </div>
+          <div>
+            <label class="block mb-1">Categorie</label>
+            <select v-model="cwCategory">
+              <option value="legere">Legere (-1 CS)</option>
+              <option value="moyenne">Moyenne</option>
+              <option value="lourde">Lourde (+1 CS)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block mb-1">Qualite</label>
+            <select v-model="cwQuality">
+              <option value="faible_qualite">Faible Qualite</option>
+              <option value="standard">Standard</option>
+              <option value="chef_doeuvre">Chef-d'oeuvre</option>
+            </select>
+          </div>
+          <div>
+            <label class="block mb-1">Fragilite</label>
+            <input v-model.number="cwFragility" type="number" min="0" max="10" />
+          </div>
+          <div>
+            <label class="block mb-1">Mod. Souffle</label>
+            <select v-model.number="cwSouffleModifier">
+              <option :value="-1">-1</option>
+              <option :value="0">0</option>
+              <option :value="1">+1</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="checkbox" v-model="cwRanged" id="cw-ranged" class="w-4 h-4" />
+            <label for="cw-ranged" class="font-label text-xs uppercase tracking-widest text-on-surface-variant cursor-pointer">Arme a distance</label>
+          </div>
+          <div class="col-span-2">
+            <label class="block mb-1">Effets speciaux</label>
+            <input v-model="cwEffects" type="text" placeholder="Escrime, Perforant 2 (separes par des virgules)" />
+          </div>
+        </div>
+        <button class="primary w-full" @click="submitCustomWeapon" :disabled="!cwName.trim()">
+          <span class="material-symbols-outlined text-sm">add</span> Creer l'arme
         </button>
       </div>
     </section>
@@ -164,7 +267,7 @@ const qualityLabels: Record<string, string> = {
         </div>
 
         <!-- Fragility tracker -->
-        <div v-if="item.weaponId" class="flex items-center gap-2 mb-2 pt-2 border-t border-outline-variant">
+        <div v-if="item.weaponId || item.customWeapon" class="flex items-center gap-2 mb-2 pt-2 border-t border-outline-variant">
           <span class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Fragilite :</span>
           <span class="font-headline text-on-surface">{{ item.currentFragility }}</span>
           <button class="px-2 py-1" @click="changeFragility(item.id, -1)" :disabled="item.currentFragility <= 0">
