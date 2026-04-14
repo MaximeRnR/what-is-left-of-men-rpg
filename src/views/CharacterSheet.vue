@@ -100,13 +100,13 @@ function goToEdit() {
       <div class="flex items-center gap-3 mb-3">
         <h1 class="font-headline text-2xl uppercase tracking-wider text-on-surface">{{ character.name }}</h1>
         <div class="flex-1 relative">
-          <span class="material-symbols-outlined text-base absolute left-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">search</span>
           <input
             v-model="searchQuery"
             type="text"
             placeholder="Filtrer..."
-            class="pl-10 py-1.5 text-xs w-full"
+            class="pr-10 py-1.5 text-xs w-full"
           />
+          <span class="material-symbols-outlined text-base absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">search</span>
         </div>
       </div>
       <div class="flex flex-wrap gap-2">
