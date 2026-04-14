@@ -89,6 +89,23 @@ function hasReroll(description: string): boolean {
   return lower.includes('relance') || lower.includes('relancer')
 }
 
+function detectTags(description: string): { label: string, color: string }[] {
+  const tags: { label: string, color: string }[] = []
+  const d = description.toLowerCase()
+
+  if (/\+\d+\s*(pv|ps\b)/.test(d) || /\+\d+\s*hp/.test(d)) tags.push({ label: '+PV', color: 'var(--color-primary)' })
+  if (/\+\d+\s*psm/.test(d)) tags.push({ label: '+PSM', color: 'var(--color-secondary)' })
+  if (/\+\d+\s*souffle/.test(d)) tags.push({ label: '+SOUFFLE', color: 'var(--color-tertiary)' })
+  if (/\+\d+\s*st\b/.test(d)) tags.push({ label: '+ST', color: 'var(--color-die-d20)' })
+  if (/\+\d+\s*(degat|degats|dégât|dégâts)/i.test(d)) tags.push({ label: '+DEGATS', color: 'var(--color-die-d4)' })
+  if (/\+\d+\s*(a l'initiative|à l'initiative|initiative)/i.test(d)) tags.push({ label: '+INITIATIVE', color: 'var(--color-die-d8)' })
+  if (/\+\d+\s*(pour toucher|touche\b|aux tirs)/i.test(d)) tags.push({ label: '+TOUCHE', color: 'var(--color-die-d10)' })
+  if (/\+\d+\s*armure/i.test(d)) tags.push({ label: '+ARMURE', color: 'var(--color-on-surface-variant)' })
+  if (/\-\d+\s*cs\b/i.test(d)) tags.push({ label: '-CS', color: 'var(--color-tertiary)' })
+
+  return tags
+}
+
 function goToEdit() {
   router.push(`/character/${characterId}/edit`)
 }
@@ -193,6 +210,7 @@ function goToEdit() {
               <span class="font-label text-xs uppercase tracking-widest" :class="dieColorClass[tier.die] ?? 'text-on-surface'">{{ tier.talentName }}</span>
               <span class="tag" :style="{ borderColor: `var(--color-die-${tier.die})`, color: `var(--color-die-${tier.die})` }">{{ tier.die }}</span>
               <span v-if="hasReroll(tier.description)" class="tag" style="border-color: var(--color-die-d20); color: var(--color-die-d20);">RELANCE</span>
+              <span v-for="t in detectTags(tier.description)" :key="t.label" class="tag" :style="{ borderColor: t.color, color: t.color }">{{ t.label }}</span>
             </div>
             <p class="text-on-surface-variant text-xs mt-1">{{ tier.description }}</p>
           </div>
