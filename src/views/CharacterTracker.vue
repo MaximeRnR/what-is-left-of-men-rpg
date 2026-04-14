@@ -16,43 +16,33 @@ watch(character, (val) => { if (val) characterRef.value = val }, { deep: true })
 
 const stats = useCharacterStats(characterRef)
 
-const {
-  currentHP,
-  currentSanity,
-  currentSouffle,
-  activeEffects,
-  modifyHP,
-  modifySanity,
-  modifySouffle,
-  resetToMax,
-  addEffect,
-  removeEffect,
-  clearEffects,
-} = useCombatTracker(characterRef, stats.maxHP, stats.maxSanity, stats.maxSouffle)
+const tracker = useCombatTracker(characterRef, stats.maxHP, stats.maxSanity, stats.maxSouffle)
 
-// Persist changes to store
-watch(
-  () => character.value?.tracker,
-  () => {
-    if (!character.value) return
-    store.updateCharacter(characterId, {
-      tracker: { ...characterRef.value.tracker },
-    })
-  },
-  { deep: true },
-)
+function persist() {
+  store.updateCharacter(characterId, {
+    tracker: { ...characterRef.value.tracker },
+  })
+}
 
 // Quick damage/heal inputs
 const hpDelta = ref(1)
 const sanityDelta = ref(1)
 const souffleDelta = ref(1)
 
+function doModifyHP(delta: number) { tracker.modifyHP(delta); persist() }
+function doModifySanity(delta: number) { tracker.modifySanity(delta); persist() }
+function doModifySouffle(delta: number) { tracker.modifySouffle(delta); persist() }
+function doReset() { tracker.resetToMax(); persist() }
+function doAddEffect(effect: string) { tracker.addEffect(effect); persist() }
+function doRemoveEffect(effect: string) { tracker.removeEffect(effect); persist() }
+function doClearEffects() { tracker.clearEffects(); persist() }
+
 // New effect input
 const newEffect = ref('')
 function submitEffect() {
   const effect = newEffect.value.trim().toUpperCase()
   if (!effect) return
-  addEffect(effect)
+  doAddEffect(effect)
   newEffect.value = ''
 }
 
@@ -67,7 +57,7 @@ const commonEffects = ['BLESSE', 'PEUR', 'EBRANLE', 'CONFUS', 'DESESPERE', 'OMBR
         <router-link :to="`/character/${characterId}`" class="text-secondary text-xs font-label uppercase tracking-widest inline-flex items-center gap-1">
           <span class="material-symbols-outlined text-sm">arrow_back</span> Retour a la fiche
         </router-link>
-        <button class="danger" @click="resetToMax">
+        <button class="danger" @click="doReset">
           <span class="material-symbols-outlined text-sm">restart_alt</span> Reinitialiser
         </button>
       </div>
@@ -79,19 +69,19 @@ const commonEffects = ['BLESSE', 'PEUR', 'EBRANLE', 'CONFUS', 'DESESPERE', 'OMBR
     <section class="bg-surface-container border border-outline-variant p-4 mb-4">
       <h2 class="mb-3">Points de Sante (PS)</h2>
       <div class="flex items-baseline gap-2 mb-3">
-        <span class="die-display text-primary">{{ currentHP }}</span>
+        <span class="die-display text-primary">{{ tracker.currentHP.value }}</span>
         <span class="text-on-surface-variant text-lg">/</span>
         <span class="font-headline text-on-surface-variant text-lg">{{ stats.maxHP.value }}</span>
       </div>
       <div class="h-1 bg-surface-container-lowest mb-3">
-        <div class="stat-bar-fill hp h-full" :style="{ width: stats.maxHP.value > 0 ? `${(currentHP / stats.maxHP.value) * 100}%` : '0%' }"></div>
+        <div class="stat-bar-fill hp h-full" :style="{ width: stats.maxHP.value > 0 ? `${(tracker.currentHP.value / stats.maxHP.value) * 100}%` : '0%' }"></div>
       </div>
       <div class="flex items-center gap-2">
         <input v-model.number="hpDelta" type="number" min="1" max="99" class="w-16 text-center" />
-        <button class="danger flex-1" @click="modifyHP(-hpDelta)">
+        <button class="danger flex-1" @click="doModifyHP(-hpDelta)">
           <span class="material-symbols-outlined text-sm">remove</span> Degats
         </button>
-        <button class="primary flex-1" @click="modifyHP(hpDelta)">
+        <button class="primary flex-1" @click="doModifyHP(hpDelta)">
           <span class="material-symbols-outlined text-sm">add</span> Soins
         </button>
       </div>
@@ -101,19 +91,19 @@ const commonEffects = ['BLESSE', 'PEUR', 'EBRANLE', 'CONFUS', 'DESESPERE', 'OMBR
     <section class="bg-surface-container border border-outline-variant p-4 mb-4">
       <h2 class="mb-3">Sante Mentale (PSM)</h2>
       <div class="flex items-baseline gap-2 mb-3">
-        <span class="die-display text-secondary">{{ currentSanity }}</span>
+        <span class="die-display text-secondary">{{ tracker.currentSanity.value }}</span>
         <span class="text-on-surface-variant text-lg">/</span>
         <span class="font-headline text-on-surface-variant text-lg">{{ stats.maxSanity.value }}</span>
       </div>
       <div class="h-1 bg-surface-container-lowest mb-3">
-        <div class="stat-bar-fill sanity h-full" :style="{ width: stats.maxSanity.value > 0 ? `${(currentSanity / stats.maxSanity.value) * 100}%` : '0%' }"></div>
+        <div class="stat-bar-fill sanity h-full" :style="{ width: stats.maxSanity.value > 0 ? `${(tracker.currentSanity.value / stats.maxSanity.value) * 100}%` : '0%' }"></div>
       </div>
       <div class="flex items-center gap-2">
         <input v-model.number="sanityDelta" type="number" min="1" max="99" class="w-16 text-center" />
-        <button class="danger flex-1" @click="modifySanity(-sanityDelta)">
+        <button class="danger flex-1" @click="doModifySanity(-sanityDelta)">
           <span class="material-symbols-outlined text-sm">remove</span> Perte
         </button>
-        <button class="primary flex-1" @click="modifySanity(sanityDelta)">
+        <button class="primary flex-1" @click="doModifySanity(sanityDelta)">
           <span class="material-symbols-outlined text-sm">add</span> Recup
         </button>
       </div>
@@ -123,19 +113,19 @@ const commonEffects = ['BLESSE', 'PEUR', 'EBRANLE', 'CONFUS', 'DESESPERE', 'OMBR
     <section class="bg-surface-container border border-outline-variant p-4 mb-4">
       <h2 class="mb-3">Souffle</h2>
       <div class="flex items-baseline gap-2 mb-3">
-        <span class="die-display text-tertiary">{{ currentSouffle }}</span>
+        <span class="die-display text-tertiary">{{ tracker.currentSouffle.value }}</span>
         <span class="text-on-surface-variant text-lg">/</span>
         <span class="font-headline text-on-surface-variant text-lg">{{ stats.maxSouffle.value }}</span>
       </div>
       <div class="h-1 bg-surface-container-lowest mb-3">
-        <div class="stat-bar-fill souffle h-full" :style="{ width: stats.maxSouffle.value > 0 ? `${(currentSouffle / stats.maxSouffle.value) * 100}%` : '0%' }"></div>
+        <div class="stat-bar-fill souffle h-full" :style="{ width: stats.maxSouffle.value > 0 ? `${(tracker.currentSouffle.value / stats.maxSouffle.value) * 100}%` : '0%' }"></div>
       </div>
       <div class="flex items-center gap-2">
         <input v-model.number="souffleDelta" type="number" min="1" max="99" class="w-16 text-center" />
-        <button class="danger flex-1" @click="modifySouffle(-souffleDelta)">
+        <button class="danger flex-1" @click="doModifySouffle(-souffleDelta)">
           <span class="material-symbols-outlined text-sm">remove</span> Depense
         </button>
-        <button class="primary flex-1" @click="modifySouffle(souffleDelta)">
+        <button class="primary flex-1" @click="doModifySouffle(souffleDelta)">
           <span class="material-symbols-outlined text-sm">add</span> Recup
         </button>
       </div>
@@ -145,16 +135,16 @@ const commonEffects = ['BLESSE', 'PEUR', 'EBRANLE', 'CONFUS', 'DESESPERE', 'OMBR
     <section class="bg-surface-container border border-outline-variant p-4 mb-4">
       <h2 class="mb-3">Etats actifs</h2>
 
-      <div v-if="activeEffects.length === 0" class="text-on-surface-variant text-sm py-4 text-center">
+      <div v-if="tracker.activeEffects.value.length === 0" class="text-on-surface-variant text-sm py-4 text-center">
         Aucun etat actif.
       </div>
 
       <div v-else class="flex flex-wrap gap-1 mb-3">
-        <span v-for="effect in activeEffects" :key="effect" class="tag error inline-flex items-center gap-1">
+        <span v-for="effect in tracker.activeEffects.value" :key="effect" class="tag error inline-flex items-center gap-1">
           {{ effect }}
-          <button class="border-0 bg-transparent text-error p-0 text-xs hover:text-on-error-container" @click="removeEffect(effect)">x</button>
+          <button class="border-0 bg-transparent text-error p-0 text-xs hover:text-on-error-container" @click="doRemoveEffect(effect)">x</button>
         </span>
-        <button v-if="activeEffects.length > 0" class="danger text-xs" @click="clearEffects">
+        <button v-if="tracker.activeEffects.value.length > 0" class="danger text-xs" @click="doClearEffects">
           Tout retirer
         </button>
       </div>
@@ -179,8 +169,8 @@ const commonEffects = ['BLESSE', 'PEUR', 'EBRANLE', 'CONFUS', 'DESESPERE', 'OMBR
             v-for="effect in commonEffects"
             :key="effect"
             class="text-xs"
-            @click="addEffect(effect)"
-            :disabled="activeEffects.includes(effect)"
+            @click="doAddEffect(effect)"
+            :disabled="tracker.activeEffects.value.includes(effect)"
           >
             {{ effect }}
           </button>
