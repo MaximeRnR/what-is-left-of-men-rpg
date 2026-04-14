@@ -39,7 +39,7 @@ function getSkillInfo(skillId: SkillId) {
   return result
 }
 
-function getUnlockedTalentsForSkill(skillId: SkillId) {
+function getVisibleTalentsForSkill(skillId: SkillId) {
   if (!character.value) return []
   const spent = character.value.skills[skillId]?.pointsSpent ?? 0
   const bonus = character.value.bonusPoints[skillId] ?? 0
@@ -49,7 +49,21 @@ function getUnlockedTalentsForSkill(skillId: SkillId) {
   const skillDef = allSkills.find(s => s.id === skillId)
   if (!skillDef) return []
 
-  return skillDef.tiers.filter(t => t.costToReach <= totalPoints)
+  const unlocked = skillDef.tiers.filter(t => t.costToReach <= totalPoints)
+  // Hide incompetent malus talents once the skill has surpassed that tier
+  if (unlocked.length > 1) {
+    return unlocked.filter(t => !t.isMalus)
+  }
+  return unlocked
+}
+
+const dieColorClass: Record<string, string> = {
+  d4: 'text-die-d4',
+  d6: 'text-die-d6',
+  d8: 'text-die-d8',
+  d10: 'text-die-d10',
+  d12: 'text-die-d12',
+  d20: 'text-die-d20',
 }
 
 function getChosenSpecialization(skillId: SkillId) {
@@ -131,37 +145,42 @@ function goToEdit() {
       <h2 class="mb-3 pb-2 border-b border-outline-variant">{{ cat.label }}</h2>
 
       <div v-for="skill in skillsByCategory(cat.key)" :key="skill.id" class="bg-surface-container border border-outline-variant p-3 mb-2">
+        <!-- Skill header: name + die icon -->
         <div class="flex items-center justify-between">
           <div>
             <strong class="text-on-surface text-sm">{{ skill.name }}</strong>
             <em class="text-on-surface-variant text-xs ml-2">{{ skill.latinName }}</em>
           </div>
-          <div class="flex items-center gap-2">
-            <template v-if="getSkillInfo(skill.id as SkillId)?.tier">
-              <DieIcon :die="getSkillInfo(skill.id as SkillId)!.die!" :size="22" class="text-primary" />
-              <span class="tag primary">{{ getSkillInfo(skill.id as SkillId)!.die }}</span>
-              <span class="tag secondary">{{ getSkillInfo(skill.id as SkillId)!.tier }}</span>
-              <span v-if="getSkillInfo(skill.id as SkillId)!.totalBonus > 0" class="tag">
-                +{{ getSkillInfo(skill.id as SkillId)!.totalBonus }}
-              </span>
-            </template>
-            <span v-else class="text-on-surface-variant text-xs">—</span>
+          <div v-if="getSkillInfo(skill.id as SkillId)?.tier" class="flex items-center gap-2">
+            <DieIcon :die="getSkillInfo(skill.id as SkillId)!.die!" :size="24" />
+            <span class="die-display text-lg" :class="dieColorClass[getSkillInfo(skill.id as SkillId)!.die!] ?? ''">{{ getSkillInfo(skill.id as SkillId)!.die }}</span>
+            <span v-if="getSkillInfo(skill.id as SkillId)!.totalBonus > 0" class="tag secondary">
+              +{{ getSkillInfo(skill.id as SkillId)!.totalBonus }}
+            </span>
           </div>
+          <span v-else class="text-on-surface-variant text-xs">—</span>
         </div>
 
-        <div v-if="getUnlockedTalentsForSkill(skill.id as SkillId).length > 0" class="mt-2 pt-2 border-t border-outline-variant">
+        <!-- Skill tier level in body -->
+        <div v-if="getSkillInfo(skill.id as SkillId)?.tier" class="mt-2 mb-2">
+          <span class="font-label text-xs uppercase tracking-widest" :class="dieColorClass[getSkillInfo(skill.id as SkillId)!.die!] ?? 'text-on-surface-variant'">
+            {{ getSkillInfo(skill.id as SkillId)!.tier }}
+          </span>
+        </div>
+
+        <!-- Unlocked talents (malus hidden once surpassed) -->
+        <div v-if="getVisibleTalentsForSkill(skill.id as SkillId).length > 0" class="mt-2 pt-2 border-t border-outline-variant">
           <div
-            v-for="tier in getUnlockedTalentsForSkill(skill.id as SkillId)"
+            v-for="tier in getVisibleTalentsForSkill(skill.id as SkillId)"
             :key="tier.level"
-            class="mb-2"
-            :class="{ 'text-error': tier.isMalus }"
+            class="mb-3"
           >
             <div class="flex items-center gap-2">
-              <DieIcon :die="tier.die" :size="18" :class="tier.isMalus ? 'text-error' : 'text-on-surface-variant'" />
-              <span class="font-label text-xs uppercase tracking-widest" :class="tier.isMalus ? 'text-error' : 'text-on-surface'">{{ tier.talentName }}</span>
-              <span class="tag" :class="tier.isMalus ? 'error' : ''">{{ tier.die }}</span>
+              <DieIcon :die="tier.die" :size="16" />
+              <span class="font-label text-xs uppercase tracking-widest" :class="dieColorClass[tier.die] ?? 'text-on-surface'">{{ tier.talentName }}</span>
+              <span class="tag" :style="{ borderColor: `var(--color-die-${tier.die})`, color: `var(--color-die-${tier.die})` }">{{ tier.die }}</span>
             </div>
-            <p class="text-on-surface-variant text-xs mt-0.5">{{ tier.description }}</p>
+            <p class="text-on-surface-variant text-xs mt-1 ml-6">{{ tier.description }}</p>
           </div>
 
           <div v-if="getChosenSpecialization(skill.id as SkillId)" class="bg-primary-container border border-primary-container p-2 mt-2">

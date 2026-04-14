@@ -175,9 +175,9 @@ function cancel() {
         </div>
 
         <div v-if="getSkillTier(skill.id as SkillId).tier" class="flex items-center gap-2 mt-1">
-          <DieIcon :die="getSkillTier(skill.id as SkillId).die!" :size="28" class="text-primary" />
-          <span class="die-display text-lg text-primary">{{ getSkillTier(skill.id as SkillId).die }}</span>
-          <span class="tag primary">{{ getSkillTier(skill.id as SkillId).tier }}</span>
+          <DieIcon :die="getSkillTier(skill.id as SkillId).die!" :size="28" />
+          <span class="die-display text-lg" :style="{ color: `var(--color-die-${getSkillTier(skill.id as SkillId).die})` }">{{ getSkillTier(skill.id as SkillId).die }}</span>
+          <span class="font-label text-xs uppercase tracking-widest" :style="{ color: `var(--color-die-${getSkillTier(skill.id as SkillId).die})` }">{{ getSkillTier(skill.id as SkillId).tier }}</span>
           <span v-if="getSkillTier(skill.id as SkillId).totalBonus > 0" class="tag secondary">
             +{{ getSkillTier(skill.id as SkillId).totalBonus }}
           </span>

@@ -62,6 +62,14 @@
   --color-inverse-surface: #e2e2e6;
   --color-inverse-on-surface: #2f3034;
 
+  /* Colors - Die tiers */
+  --color-die-d4: #ff6b6b;
+  --color-die-d6: #909095;
+  --color-die-d8: #adcbda;
+  --color-die-d10: #96ccff;
+  --color-die-d12: #ffb4a8;
+  --color-die-d20: #ffd700;
+
   /* Fonts */
   --font-headline: "Space Grotesk", sans-serif;
   --font-body: "Inter", sans-serif;

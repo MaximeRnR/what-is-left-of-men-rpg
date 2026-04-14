@@ -1,13 +1,27 @@
 <script setup lang="ts">
-defineProps<{
+import { computed } from 'vue'
+
+const props = defineProps<{
   die: string  // "d4" | "d6" | "d8" | "d10" | "d12" | "d20"
   size?: number // px, default 32
 }>()
+
+const dieColor = computed(() => {
+  const map: Record<string, string> = {
+    d4: 'var(--color-die-d4)',
+    d6: 'var(--color-die-d6)',
+    d8: 'var(--color-die-d8)',
+    d10: 'var(--color-die-d10)',
+    d12: 'var(--color-die-d12)',
+    d20: 'var(--color-die-d20)',
+  }
+  return map[props.die] ?? 'currentColor'
+})
 </script>
 
 <template>
   <!-- d4 — Tetrahedron -->
-  <svg v-if="die === 'd4'" :width="size ?? 32" :height="size ?? 32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="die-icon">
+  <svg v-if="die === 'd4'" :width="size ?? 32" :height="size ?? 32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="die-icon" :style="{ color: dieColor }">
     <polygon points="50,8 8,88 92,88" stroke="currentColor" stroke-width="3" fill="none" stroke-linejoin="round"/>
     <line x1="50" y1="8" x2="50" y2="88" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
     <line x1="8" y1="88" x2="71" y2="48" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
@@ -15,7 +29,7 @@ defineProps<{
   </svg>
 
   <!-- d6 — Cube -->
-  <svg v-else-if="die === 'd6'" :width="size ?? 32" :height="size ?? 32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="die-icon">
+  <svg v-else-if="die === 'd6'" :width="size ?? 32" :height="size ?? 32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="die-icon" :style="{ color: dieColor }">
     <rect x="12" y="12" width="76" height="76" rx="6" stroke="currentColor" stroke-width="3" fill="none"/>
     <line x1="12" y1="12" x2="30" y2="4" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
     <line x1="88" y1="12" x2="96" y2="4" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
@@ -26,7 +40,7 @@ defineProps<{
   </svg>
 
   <!-- d8 — Octahedron (diamond shape) -->
-  <svg v-else-if="die === 'd8'" :width="size ?? 32" :height="size ?? 32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="die-icon">
+  <svg v-else-if="die === 'd8'" :width="size ?? 32" :height="size ?? 32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="die-icon" :style="{ color: dieColor }">
     <polygon points="50,4 96,50 50,96 4,50" stroke="currentColor" stroke-width="3" fill="none" stroke-linejoin="round"/>
     <line x1="4" y1="50" x2="96" y2="50" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
     <line x1="50" y1="4" x2="30" y2="50" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
@@ -35,7 +49,7 @@ defineProps<{
   </svg>
 
   <!-- d10 — Pentagonal shape -->
-  <svg v-else-if="die === 'd10'" :width="size ?? 32" :height="size ?? 32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="die-icon">
+  <svg v-else-if="die === 'd10'" :width="size ?? 32" :height="size ?? 32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="die-icon" :style="{ color: dieColor }">
     <polygon points="50,4 93,35 80,88 20,88 7,35" stroke="currentColor" stroke-width="3" fill="none" stroke-linejoin="round"/>
     <line x1="50" y1="4" x2="50" y2="88" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
     <line x1="7" y1="35" x2="80" y2="88" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
@@ -44,7 +58,7 @@ defineProps<{
   </svg>
 
   <!-- d12 — Dodecahedron (hexagonal shape) -->
-  <svg v-else-if="die === 'd12'" :width="size ?? 32" :height="size ?? 32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="die-icon">
+  <svg v-else-if="die === 'd12'" :width="size ?? 32" :height="size ?? 32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="die-icon" :style="{ color: dieColor }">
     <polygon points="50,4 88,20 100,58 76,92 24,92 0,58 12,20" stroke="currentColor" stroke-width="3" fill="none" stroke-linejoin="round"/>
     <line x1="50" y1="4" x2="50" y2="42" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
     <line x1="12" y1="20" x2="50" y2="42" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
@@ -58,7 +72,7 @@ defineProps<{
   </svg>
 
   <!-- d20 — Icosahedron (triangulated shape) -->
-  <svg v-else-if="die === 'd20'" :width="size ?? 32" :height="size ?? 32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="die-icon">
+  <svg v-else-if="die === 'd20'" :width="size ?? 32" :height="size ?? 32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="die-icon" :style="{ color: dieColor }">
     <polygon points="50,2 95,28 95,72 50,98 5,72 5,28" stroke="currentColor" stroke-width="3" fill="none" stroke-linejoin="round"/>
     <line x1="50" y1="2" x2="5" y2="72" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
     <line x1="50" y1="2" x2="95" y2="72" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
