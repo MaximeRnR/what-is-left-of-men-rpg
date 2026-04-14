@@ -96,15 +96,20 @@ const attacks = computed((): AttackInfo[] => {
     // Base attack cost = 6 CS
     let baseCost = 6
 
-    // CS modifiers from talents
+    // CS modifiers from talents (only apply bonuses, not incompetent malus which are handled separately)
     const csM = stats.csModifiers.value
     if (!isRanged) {
-      baseCost += (csM['attaque_melee'] ?? 0)
-      baseCost += (csM['parade'] ? 0 : 0) // parade is separate
+      // Martial entraine: -1 CS attaque melee
+      if (tierResult.tier !== 'incompetent') {
+        baseCost += (csM['attaque_melee'] ?? 0)
+      }
     } else {
+      // Archerie incompetent: +1 CS attaque distance (only if incompetent)
+      // Archerie entraine+: reductions
       baseCost += (csM['attaque_distance'] ?? 0)
     }
-    // Post-attack malus from martial incompetent
+
+    // Post-attack malus (martial incompetent only)
     const postAttackMalus = csM['post_attaque_martiale'] ?? 0
 
     // Weapon souffle modifier
@@ -147,7 +152,7 @@ const attacks = computed((): AttackInfo[] => {
       notes.push('Arme LOURDE (+1 CS)')
     }
 
-    if (postAttackMalus > 0 && !isRanged) {
+    if (postAttackMalus > 0 && !isRanged && tierResult.tier === 'incompetent') {
       notes.push(`+${postAttackMalus} CS prochaine action martiale (Incompetent)`)
     }
 
