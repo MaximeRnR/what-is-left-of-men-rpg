@@ -125,25 +125,6 @@ function detectTags(description: string): { label: string, color: string }[] {
   return tags
 }
 
-function getHeaderTagsForSkill(skillId: SkillId): { label: string, color: string }[] {
-  const talents = getVisibleTalentsForSkill(skillId)
-  const seen = new Set<string>()
-  const all: { label: string, color: string }[] = []
-
-  for (const tier of talents) {
-    for (const t of detectTags(tier.description)) {
-      // Only keep +X bonus tags in the header
-      if (!t.label.startsWith('+')) continue
-      if (!seen.has(t.label)) {
-        all.push(t)
-        seen.add(t.label)
-      }
-    }
-  }
-
-  return all
-}
-
 function goToEdit() {
   router.push(`/character/${characterId}/edit`)
 }
@@ -226,14 +207,13 @@ function goToEdit() {
             <strong class="text-on-surface text-sm">{{ skill.name }}</strong>
             <em class="text-on-surface-variant text-xs ml-2">{{ skill.latinName }}</em>
           </div>
-          <div class="flex items-center gap-1.5 flex-wrap justify-end">
+          <div class="flex items-center gap-1.5 justify-end">
             <template v-if="getSkillInfo(skill.id as SkillId)?.tier">
               <span class="die-display text-lg font-bold" :class="dieColorClass[getSkillInfo(skill.id as SkillId)!.die!] ?? ''">{{ getSkillInfo(skill.id as SkillId)!.die }}</span>
               <span class="tag" :style="{ borderColor: `var(--color-die-${getSkillInfo(skill.id as SkillId)!.die})`, color: `var(--color-die-${getSkillInfo(skill.id as SkillId)!.die})` }">{{ getSkillInfo(skill.id as SkillId)!.tier }}</span>
-              <span v-if="getSkillInfo(skill.id as SkillId)!.totalBonus > 0" class="tag secondary">
+              <span v-if="getSkillInfo(skill.id as SkillId)!.totalBonus > 0" class="die-display text-lg font-bold" :class="dieColorClass[getSkillInfo(skill.id as SkillId)!.die!] ?? ''">
                 +{{ getSkillInfo(skill.id as SkillId)!.totalBonus }}
               </span>
-              <span v-for="t in getHeaderTagsForSkill(skill.id as SkillId)" :key="t.label" class="tag" :style="{ borderColor: t.color, color: t.color }">{{ t.label }}</span>
             </template>
             <span v-else class="text-on-surface-variant text-xs">—</span>
           </div>
