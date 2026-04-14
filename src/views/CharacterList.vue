@@ -15,7 +15,7 @@ function deleteCharacter(id: string) {
 
 function selectCharacter(id: string) {
   store.setActiveCharacter(id)
-  // Phase 2 will navigate to /character/:id
+  router.push(`/character/${id}`)
 }
 </script>
 
