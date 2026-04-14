@@ -7,6 +7,7 @@ import { computeSkillTier } from '../composables/useSkillCalculator'
 import { createEmptyCharacter } from '../models/character'
 import { allSkills } from '../data/skills'
 import type { SkillId, SkillCategory } from '../models/skill'
+import DieIcon from '../components/DieIcon.vue'
 
 const router = useRouter()
 const store = useCharacterStore()
@@ -130,6 +131,7 @@ function save() {
         </div>
 
         <div v-if="getSkillTier(skill.id as SkillId).tier" class="flex items-center gap-2 mt-1">
+          <DieIcon :die="getSkillTier(skill.id as SkillId).die!" :size="28" class="text-primary" />
           <span class="die-display text-lg text-primary">{{ getSkillTier(skill.id as SkillId).die }}</span>
           <span class="tag primary">{{ getSkillTier(skill.id as SkillId).tier }}</span>
           <span v-if="getSkillTier(skill.id as SkillId).extraBonus > 0" class="tag secondary">

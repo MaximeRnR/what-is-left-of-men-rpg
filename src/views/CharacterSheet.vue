@@ -6,6 +6,7 @@ import { useCharacterStats } from '../composables/useCharacterStats'
 import { computeSkillTier } from '../composables/useSkillCalculator'
 import { allSkills } from '../data/skills'
 import type { SkillId, SkillCategory } from '../models/skill'
+import DieIcon from '../components/DieIcon.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -137,6 +138,7 @@ function goToEdit() {
           </div>
           <div class="flex items-center gap-2">
             <template v-if="getSkillInfo(skill.id as SkillId)?.tier">
+              <DieIcon :die="getSkillInfo(skill.id as SkillId)!.die!" :size="22" class="text-primary" />
               <span class="tag primary">{{ getSkillInfo(skill.id as SkillId)!.die }}</span>
               <span class="tag secondary">{{ getSkillInfo(skill.id as SkillId)!.tier }}</span>
               <span v-if="getSkillInfo(skill.id as SkillId)!.totalBonus > 0" class="tag">
@@ -155,6 +157,7 @@ function goToEdit() {
             :class="{ 'text-error': tier.isMalus }"
           >
             <div class="flex items-center gap-2">
+              <DieIcon :die="tier.die" :size="18" :class="tier.isMalus ? 'text-error' : 'text-on-surface-variant'" />
               <span class="font-label text-xs uppercase tracking-widest" :class="tier.isMalus ? 'text-error' : 'text-on-surface'">{{ tier.talentName }}</span>
               <span class="tag" :class="tier.isMalus ? 'error' : ''">{{ tier.die }}</span>
             </div>
