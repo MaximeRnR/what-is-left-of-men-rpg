@@ -15,90 +15,118 @@ describe('useCharacterStats', () => {
     return useCharacterStats(character)
   }
 
-  it('returns base stats with no points allocated', () => {
+  // With 0 points all skills are at incompetent (base state)
+  // Endurance incompetent: -1 HP
+  // Perception incompetent: -1 initiative
+  // Instinct incompetent: -1 initiative
+  // Empathie incompetent: +1 cs_modifier (aider) — not HP/sanity/souffle
+  // Archerie incompetent: +1 cs_modifier (distance) — not HP/sanity/souffle
+  // Martial incompetent: +1 cs_modifier — not HP/sanity/souffle
+
+  it('returns base stats with no points (all at incompetent)', () => {
     const stats = setup()
-    expect(stats.maxHP.value).toBe(10)
+    // Base 10 HP - 1 (endurance incompetent) = 9
+    expect(stats.maxHP.value).toBe(9)
     expect(stats.maxSanity.value).toBe(10)
     expect(stats.maxSouffle.value).toBe(10)
+    // Perception incompetent -1 + Instinct incompetent -1 = -2
+    expect(stats.initiativeModifier.value).toBe(-2)
   })
 
   it('adds HP from endurance tiers (cumulative)', () => {
-    // Endurance at 6 points: incompetent(-1HP) + initie(+1HP) + entraine(+1HP) + competent(+1HP) = +2HP
-    const stats = setup({ endurance: 6 })
+    // Endurance at 5 points = competent: incompetent(-1) + initie(+1) + entraine(+1) + competent(+1) = +2
+    // Base 9 (from other incompetent malus) + 2 net from endurance tiers = 9 - (-1) + 2 = 9 + 3 = 12
+    // Actually: all skills at incompetent gives -1 HP from endurance. Now endurance at 5 gives full chain.
+    // Total HP effects: endurance(-1+1+1+1) = +2 net from endurance. Other skills: no HP effects.
+    // So: 10 + 2 = 12
+    const stats = setup({ endurance: 5 })
     expect(stats.maxHP.value).toBe(12)
   })
 
-  it('subtracts HP from endurance incompetent', () => {
-    // Endurance incompetent: -1 HP
+  it('endurance at 0 points (incompetent) gives -1 HP', () => {
+    // Just checking the endurance part: incompetent = -1 HP
+    // All other skills also at incompetent, but only endurance affects HP
+    const stats = setup()
+    expect(stats.maxHP.value).toBe(9) // 10 - 1
+  })
+
+  it('endurance at 1 point (initie) gives net 0 HP from endurance', () => {
+    // incompetent(-1) + initie(+1) = 0 net
     const stats = setup({ endurance: 1 })
-    expect(stats.maxHP.value).toBe(9)
+    expect(stats.maxHP.value).toBe(10)
   })
 
   it('adds sanity from courage entraine and competent', () => {
-    // Courage: entraine +1 PSM, competent +2 PSM = +3 at 6 points
-    const stats = setup({ courage: 6 })
+    // Courage at 5 = competent: entraine(+1 PSM) + competent(+2 PSM) = +3 PSM
+    const stats = setup({ courage: 5 })
     expect(stats.maxSanity.value).toBe(13)
   })
 
   it('adds sanity from empathie competent', () => {
-    // Empathie competent: +2 PSM
-    const stats = setup({ empathie: 6 })
+    // Empathie at 5 = competent: +2 PSM
+    const stats = setup({ empathie: 5 })
     expect(stats.maxSanity.value).toBe(12)
   })
 
   it('adds souffle from endurance maitre', () => {
-    // Endurance maitre: +2HP +1 Souffle. Cumulative HP: -1+1+1+1+2=4
-    const stats = setup({ endurance: 10 })
+    // Endurance at 9 = maitre: -1+1+1+1+2 = +4 HP, +1 Souffle
+    const stats = setup({ endurance: 9 })
     expect(stats.maxHP.value).toBe(14)
     expect(stats.maxSouffle.value).toBe(11)
   })
 
   it('adds souffle from agilite maitre', () => {
-    // Agilite maitre: +1 Souffle. Competent: +1 ST
-    const stats = setup({ agilite: 10 })
+    // Agilite at 9 = maitre: competent(+1 ST), maitre(+1 Souffle)
+    const stats = setup({ agilite: 9 })
     expect(stats.maxSouffle.value).toBe(11)
     expect(stats.stModifier.value).toBe(1)
   })
 
   it('computes ST modifier from ombre competent', () => {
-    // Ombre competent: +1 ST
-    const stats = setup({ ombre: 6 })
+    // Ombre at 5 = competent: +1 ST
+    const stats = setup({ ombre: 5 })
     expect(stats.stModifier.value).toBe(1)
   })
 
   it('adds specialization passive effects', () => {
-    // Ombre competent + gredin specialization: +1 ST (tier) + +1 ST (spec) = +2 ST
-    const stats = setup({ ombre: 6 }, { ombre: 'gredin' })
+    // Ombre at 5 (competent) + gredin: +1 ST (tier) + +1 ST (spec) = +2 ST
+    const stats = setup({ ombre: 5 }, { ombre: 'gredin' })
     expect(stats.stModifier.value).toBe(2)
   })
 
   it('computes initiative modifiers', () => {
-    // Instinct: incompetent -1, initie +1 => net 0 at initie
-    const stats = setup({ instinct: 2 })
-    expect(stats.initiativeModifier.value).toBe(0)
-  })
-
-  it('instinct incompetent gives -1 initiative', () => {
+    // Instinct at 1 = initie: incompetent(-1) + initie(+1) = net 0
+    // Perception at 0 = incompetent: -1
+    // Total: -1
     const stats = setup({ instinct: 1 })
     expect(stats.initiativeModifier.value).toBe(-1)
   })
 
+  it('instinct at 0 (incompetent) gives -1 initiative', () => {
+    // Instinct incompetent -1, Perception incompetent -1 = -2 total
+    const stats = setup()
+    expect(stats.initiativeModifier.value).toBe(-2)
+  })
+
   it('perception entraine gives +1 initiative', () => {
-    // Perception: incompetent -1 initiative, entraine +1 initiative => net 0
-    const stats = setup({ perception: 4 })
-    expect(stats.initiativeModifier.value).toBe(0)
+    // Perception at 3 = entraine: incompetent(-1) + entraine(+1) = net 0
+    // Instinct at 0 = incompetent: -1
+    // Total: -1
+    const stats = setup({ perception: 3 })
+    expect(stats.initiativeModifier.value).toBe(-1)
   })
 
   it('collects unlocked talents', () => {
-    const stats = setup({ martial: 4, endurance: 2 })
-    // Martial at entraine: incompetent + initie + entraine = 3 talents
-    // Endurance at initie: incompetent + initie = 2 talents
-    expect(stats.unlockedTalents.value).toHaveLength(5)
+    // Martial at 3 = entraine: incompetent + initie + entraine = 3 talents
+    // Endurance at 1 = initie: incompetent + initie = 2 talents
+    // All other 17 skills at 0 = incompetent = 17 talents
+    const stats = setup({ martial: 3, endurance: 1 })
+    expect(stats.unlockedTalents.value).toHaveLength(3 + 2 + 17)
   })
 
   it('combines stats from multiple skills', () => {
-    // Endurance 6 (+2 HP) + Courage 6 (+3 PSM) + Agilite 10 (+1 Souffle, +1 ST)
-    const stats = setup({ endurance: 6, courage: 6, agilite: 10 })
+    // Endurance 5 (competent: +2 HP net) + Courage 5 (competent: +3 PSM) + Agilite 9 (maitre: +1 Souffle, +1 ST)
+    const stats = setup({ endurance: 5, courage: 5, agilite: 9 })
     expect(stats.maxHP.value).toBe(12)
     expect(stats.maxSanity.value).toBe(13)
     expect(stats.maxSouffle.value).toBe(11)
@@ -106,8 +134,8 @@ describe('useCharacterStats', () => {
   })
 
   it('includes bonus points in skill tier calculation for unlocked talents', () => {
-    // Martial 2 points (initie) + 2 bonus = entraine level for talent display
-    const stats = setup({ martial: 2 }, {}, { martial: 2 })
+    // Martial 1 point (initie) + 2 bonus = 3 total = entraine
+    const stats = setup({ martial: 1 }, {}, { martial: 2 })
     const martialTalents = stats.unlockedTalents.value.filter(t => t.skill === 'martial')
     expect(martialTalents).toHaveLength(3) // incompetent + initie + entraine
   })

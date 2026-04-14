@@ -8,18 +8,22 @@
       {
         "level": "incompetent",
         "die": "d4",
-        "costToReach": 1,
+        "costToReach": 0,
         "talentName": "Violence maladroite",
         "description": "Apres une ATTAQUE, votre prochaine action martiale coute +1 CS.",
         "isMalus": true,
         "passiveEffects": [
-          { "type": "cs_modifier", "value": 1, "condition": "post_attaque_martiale" }
+          {
+            "type": "cs_modifier",
+            "value": 1,
+            "condition": "post_attaque_martiale"
+          }
         ]
       },
       {
         "level": "initie",
         "die": "d6",
-        "costToReach": 2,
+        "costToReach": 1,
         "talentName": "Gestes appris",
         "description": "La premiere ATTAQUE du combat coute -1 CS.",
         "isMalus": false,
@@ -28,19 +32,27 @@
       {
         "level": "entraine",
         "die": "d8",
-        "costToReach": 4,
+        "costToReach": 3,
         "talentName": "Economie de mouvement",
         "description": "Les ATTAQUES et PARADES coutent -1 CS.",
         "isMalus": false,
         "passiveEffects": [
-          { "type": "cs_modifier", "value": -1, "condition": "attaque_melee" },
-          { "type": "cs_modifier", "value": -1, "condition": "parade" }
+          {
+            "type": "cs_modifier",
+            "value": -1,
+            "condition": "attaque_melee"
+          },
+          {
+            "type": "cs_modifier",
+            "value": -1,
+            "condition": "parade"
+          }
         ]
       },
       {
         "level": "competent",
         "die": "d10",
-        "costToReach": 6,
+        "costToReach": 5,
         "talentName": "Lecture du combat",
         "description": "Choisir une specialisation lors de l'acquisition.",
         "isMalus": false,
@@ -63,7 +75,7 @@
       {
         "level": "maitre",
         "die": "d12",
-        "costToReach": 10,
+        "costToReach": 9,
         "talentName": "Domination de la Tempo",
         "description": "Une fois par Tour, lorsque vous reussissez une PARADE ou une ESQUIVE, vous pouvez immediatement effectuer une ATTAQUE pour 3 CS, meme si ce n'est pas votre Tour.",
         "isMalus": false,
@@ -89,18 +101,22 @@
       {
         "level": "incompetent",
         "die": "d4",
-        "costToReach": 1,
+        "costToReach": 0,
         "talentName": "Tir maladroit",
         "description": "Ajoutez +1 CS au cout de toute ATTAQUE a distance.",
         "isMalus": true,
         "passiveEffects": [
-          { "type": "cs_modifier", "value": 1, "condition": "attaque_distance" }
+          {
+            "type": "cs_modifier",
+            "value": 1,
+            "condition": "attaque_distance"
+          }
         ]
       },
       {
         "level": "initie",
         "die": "d6",
-        "costToReach": 2,
+        "costToReach": 1,
         "talentName": "Reflexe Oculaire",
         "description": "La premiere ATTAQUE a distance du combat coute -1 CS.",
         "isMalus": false,
@@ -109,18 +125,22 @@
       {
         "level": "entraine",
         "die": "d8",
-        "costToReach": 4,
+        "costToReach": 3,
         "talentName": "Decocher",
         "description": "Le SPECIAL : RECHARGER coute -1 CS.",
         "isMalus": false,
         "passiveEffects": [
-          { "type": "cs_modifier", "value": -1, "condition": "recharger" }
+          {
+            "type": "cs_modifier",
+            "value": -1,
+            "condition": "recharger"
+          }
         ]
       },
       {
         "level": "competent",
         "die": "d10",
-        "costToReach": 6,
+        "costToReach": 5,
         "talentName": "Choix tactique",
         "description": "Choisir une specialisation lors de l'acquisition.",
         "isMalus": false,
@@ -137,7 +157,11 @@
             "name": "Tireur Rapide",
             "description": "+1 aux Tirs Courte Portee et -1CS sur l'ATTAQUE a distance.",
             "passiveEffects": [
-              { "type": "cs_modifier", "value": -1, "condition": "attaque_distance" }
+              {
+                "type": "cs_modifier",
+                "value": -1,
+                "condition": "attaque_distance"
+              }
             ]
           }
         ]
@@ -145,12 +169,16 @@
       {
         "level": "maitre",
         "die": "d12",
-        "costToReach": 10,
+        "costToReach": 9,
         "talentName": "Oeil de faucon",
         "description": "+1 Degats a Distance. Une fois par Tour, vous pouvez relancer un jet de Tir rate en depensant 1 CS supplementaire.",
         "isMalus": false,
         "passiveEffects": [
-          { "type": "damage", "value": 1, "condition": "distance" }
+          {
+            "type": "damage",
+            "value": 1,
+            "condition": "distance"
+          }
         ]
       },
       {
@@ -173,57 +201,75 @@
       {
         "level": "incompetent",
         "die": "d4",
-        "costToReach": 1,
+        "costToReach": 0,
         "talentName": "Corps fragile",
         "description": "Chaque fois que vous subissez un degat, ajoutez +1 au cout de Souffle pour toute action CORPS ce Tour. Vos PV de depart sont -1.",
         "isMalus": true,
         "passiveEffects": [
-          { "type": "hp", "value": -1 }
+          {
+            "type": "hp",
+            "value": -1
+          }
         ]
       },
       {
         "level": "initie",
         "die": "d6",
-        "costToReach": 2,
+        "costToReach": 1,
         "talentName": "Premiers pas",
         "description": "+1 PV. De plus, vous pouvez ignorer 1 petit malus temporaire lie a la fatigue ou a l'effort.",
         "isMalus": false,
         "passiveEffects": [
-          { "type": "hp", "value": 1 }
+          {
+            "type": "hp",
+            "value": 1
+          }
         ]
       },
       {
         "level": "entraine",
         "die": "d8",
-        "costToReach": 4,
+        "costToReach": 3,
         "talentName": "Tenacite",
         "description": "+1 PV. Vos efforts prolonges coutent 1 CS de moins par Tours pour maintenir une action continue.",
         "isMalus": false,
         "passiveEffects": [
-          { "type": "hp", "value": 1 }
+          {
+            "type": "hp",
+            "value": 1
+          }
         ]
       },
       {
         "level": "competent",
         "die": "d10",
-        "costToReach": 6,
+        "costToReach": 5,
         "talentName": "Robustesse",
         "description": "+1 PV. Vous reduisez tout malus appliques aux jets de CORPS lies a l'etat Blesse.",
         "isMalus": false,
         "passiveEffects": [
-          { "type": "hp", "value": 1 }
+          {
+            "type": "hp",
+            "value": 1
+          }
         ]
       },
       {
         "level": "maitre",
         "die": "d12",
-        "costToReach": 10,
+        "costToReach": 9,
         "talentName": "Endurance de fer",
         "description": "+2 PV et +1 Souffle. Tous les effets negatifs ont une duree reduite de 1 avec pour minimum 1 tour.",
         "isMalus": false,
         "passiveEffects": [
-          { "type": "hp", "value": 2 },
-          { "type": "souffle", "value": 1 }
+          {
+            "type": "hp",
+            "value": 2
+          },
+          {
+            "type": "souffle",
+            "value": 1
+          }
         ]
       },
       {
@@ -246,7 +292,7 @@
       {
         "level": "incompetent",
         "die": "d4",
-        "costToReach": 1,
+        "costToReach": 0,
         "talentName": "Musculature inapte",
         "description": "Les jets pour porter, pousser ou lever des objets lourds sont consideres difficiles (ST+2).",
         "isMalus": true,
@@ -255,7 +301,7 @@
       {
         "level": "initie",
         "die": "d6",
-        "costToReach": 2,
+        "costToReach": 1,
         "talentName": "Force tranquille",
         "description": "+1 aux jets pour porter, soulever ou pousser des objets. Vous pouvez maintenant faire des SPECIAL contextuelles en combat au corps a corps comme ATTRAPER, TACLER, etc.",
         "isMalus": false,
@@ -264,23 +310,31 @@
       {
         "level": "entraine",
         "die": "d8",
-        "costToReach": 4,
+        "costToReach": 3,
         "talentName": "Puissance maitrisee",
         "description": "1 Relance de Degats par Combat. Vos SPECIAL contextuelles coutent -1 CS.",
         "isMalus": false,
         "passiveEffects": [
-          { "type": "cs_modifier", "value": -1, "condition": "special_contextuelles" }
+          {
+            "type": "cs_modifier",
+            "value": -1,
+            "condition": "special_contextuelles"
+          }
         ]
       },
       {
         "level": "competent",
         "die": "d10",
-        "costToReach": 6,
+        "costToReach": 5,
         "talentName": "Mastoque",
         "description": "+1 Degat au Corps a Corps. Choisir une specialisation lors de l'acquisition.",
         "isMalus": false,
         "passiveEffects": [
-          { "type": "damage", "value": 1, "condition": "corps_a_corps" }
+          {
+            "type": "damage",
+            "value": 1,
+            "condition": "corps_a_corps"
+          }
         ],
         "specializations": [
           {
@@ -294,7 +348,11 @@
             "name": "Pugiliste",
             "description": "Vos attaques avec des armes de POING ou a main nue ont +1 Degats.",
             "passiveEffects": [
-              { "type": "damage", "value": 1, "condition": "poing_main_nue" }
+              {
+                "type": "damage",
+                "value": 1,
+                "condition": "poing_main_nue"
+              }
             ]
           }
         ]
@@ -302,7 +360,7 @@
       {
         "level": "maitre",
         "die": "d12",
-        "costToReach": 10,
+        "costToReach": 9,
         "talentName": "Colosse",
         "description": "Les armes LOURDE n'ont plus de malus de CS. Vous pouvez depenser 1 CS pour relancer un jet de Corps rate lie a un SPECIAL (ATTRAPER, TACLER, etc.) une fois par Tour.",
         "isMalus": false,
@@ -328,7 +386,7 @@
       {
         "level": "incompetent",
         "die": "d4",
-        "costToReach": 1,
+        "costToReach": 0,
         "talentName": "Deux pieds gauches",
         "description": "Toutes vos ESQUIVE ont -1. Lorsque vous etes ENCERCLER, comptez 1 adversaire additionnel.",
         "isMalus": true,
@@ -337,7 +395,7 @@
       {
         "level": "initie",
         "die": "d6",
-        "costToReach": 2,
+        "costToReach": 1,
         "talentName": "Habile",
         "description": "+1 aux jets d'Agilite pour ESQUIVER ou effectuer une action acrobatique simple. Vous augmentez votre ST de 1 lorsque vous declenchez une ATTAQUE D'OPPORTUNITE.",
         "isMalus": false,
@@ -346,23 +404,30 @@
       {
         "level": "entraine",
         "die": "d8",
-        "costToReach": 4,
+        "costToReach": 3,
         "talentName": "Reflexes affutes",
         "description": "-1 CS pour vos ESQUIVES. Une fois par tour vous pouvez relancer un jet d'Agilite rate. Vous ne pouvez etre ENCERCLER qu'a partir de 3 Adversaires au Corps a Corps.",
         "isMalus": false,
         "passiveEffects": [
-          { "type": "cs_modifier", "value": -1, "condition": "esquive" }
+          {
+            "type": "cs_modifier",
+            "value": -1,
+            "condition": "esquive"
+          }
         ]
       },
       {
         "level": "competent",
         "die": "d10",
-        "costToReach": 6,
+        "costToReach": 5,
         "talentName": "La Voie de l'Eau",
         "description": "+1 ST. Choisir une specialisation lors de l'acquisition.",
         "isMalus": false,
         "passiveEffects": [
-          { "type": "st", "value": 1 }
+          {
+            "type": "st",
+            "value": 1
+          }
         ],
         "specializations": [
           {
@@ -382,12 +447,15 @@
       {
         "level": "maitre",
         "die": "d12",
-        "costToReach": 10,
+        "costToReach": 9,
         "talentName": "La Voie de l'Air",
         "description": "+1 Souffle. Vous pouvez relancer un jet d'Agilite par Tour. Vos ATTAQUES D'OPPORTUNITE sont gratuites.",
         "isMalus": false,
         "passiveEffects": [
-          { "type": "souffle", "value": 1 }
+          {
+            "type": "souffle",
+            "value": 1
+          }
         ]
       },
       {
@@ -410,7 +478,7 @@
       {
         "level": "incompetent",
         "die": "d4",
-        "costToReach": 1,
+        "costToReach": 0,
         "talentName": "Silhouette maladroite",
         "description": "Vous etes toujours considere comme ayant le Focus de vos adversaires tant que vous etes engage au Corps a Corps. Lorsque vous tentez une action de dissimulation, la difficulte est augmentee de 1.",
         "isMalus": true,
@@ -419,7 +487,7 @@
       {
         "level": "initie",
         "die": "d6",
-        "costToReach": 2,
+        "costToReach": 1,
         "talentName": "Presence trouble",
         "description": "+1 aux jets d'Ombre pour se cacher, se deplacer discretement ou brouiller l'attention. Si vous frappez un adversaire qui ne vous a pas attaque ce tour-ci, vous etes considere comme EMBUSQUE pour cette attaque et cette attaque uniquement.",
         "isMalus": false,
@@ -428,7 +496,7 @@
       {
         "level": "entraine",
         "die": "d8",
-        "costToReach": 4,
+        "costToReach": 3,
         "talentName": "Pas feutres",
         "description": "+1 Touche avec les armes COURTE et POING lorsque vous etes EMBUSQUE. Une fois par tour, apres avoir reussi une attaque, vous pouvez changer de position narrative sans cout supplementaire.",
         "isMalus": false,
@@ -437,12 +505,15 @@
       {
         "level": "competent",
         "die": "d10",
-        "costToReach": 6,
+        "costToReach": 5,
         "talentName": "Angle mort",
         "description": "+1 ST. Choisir une specialisation lors de l'acquisition.",
         "isMalus": false,
         "passiveEffects": [
-          { "type": "st", "value": 1 }
+          {
+            "type": "st",
+            "value": 1
+          }
         ],
         "specializations": [
           {
@@ -450,7 +521,10 @@
             "name": "Gredin",
             "description": "+1 ST. Vous pouvez rediriger le Focus d'un adversaire sur la cible de votre choix lorsque vous frappez avec l'effet EMBUSQUE.",
             "passiveEffects": [
-              { "type": "st", "value": 1 }
+              {
+                "type": "st",
+                "value": 1
+              }
             ]
           },
           {
@@ -458,8 +532,16 @@
             "name": "Assassin",
             "description": "Vous infligez +1 Degats avec les armes COURTE, les attaques contre les cibles dont vous n'avez pas le Focus coutent -1 CS.",
             "passiveEffects": [
-              { "type": "damage", "value": 1, "condition": "arme_courte" },
-              { "type": "cs_modifier", "value": -1, "condition": "sans_focus" }
+              {
+                "type": "damage",
+                "value": 1,
+                "condition": "arme_courte"
+              },
+              {
+                "type": "cs_modifier",
+                "value": -1,
+                "condition": "sans_focus"
+              }
             ]
           }
         ]
@@ -467,12 +549,16 @@
       {
         "level": "maitre",
         "die": "d12",
-        "costToReach": 10,
+        "costToReach": 9,
         "talentName": "Chat Gris",
         "description": "+1 Degat lorsque vous frappez un adversaire avec l'effet EMBUSQUE. Votre prochaine attaque declenche une ATTAQUE D'OPPORTUNITE pour tous vos Allies a portee de la cible.",
         "isMalus": false,
         "passiveEffects": [
-          { "type": "damage", "value": 1, "condition": "embusque" }
+          {
+            "type": "damage",
+            "value": 1,
+            "condition": "embusque"
+          }
         ]
       },
       {
@@ -495,7 +581,7 @@
       {
         "level": "incompetent",
         "die": "d4",
-        "costToReach": 1,
+        "costToReach": 0,
         "talentName": "Mains malhabiles",
         "description": "Toute tentative de creation ou reparation a une consequence negative mineure (temps double, materiau endommage, effet instable) en cas d'echec. Vous ne pouvez pas identifier les Traits d'un objet sans aide.",
         "isMalus": true,
@@ -504,7 +590,7 @@
       {
         "level": "initie",
         "die": "d6",
-        "costToReach": 2,
+        "costToReach": 1,
         "talentName": "Bricoleur",
         "description": "Vous pouvez identifier les objets, substances ou mecanismes simples (hors OCCULTE ou AUTRE MONDE). Vous pouvez reparer ou fabriquer des objets simples avec les materiaux appropries. Vous pouvez ajouter le Trait RUDIMENTAIRE a une creation pour remplacer un materiau manquant.",
         "isMalus": false,
@@ -513,7 +599,7 @@
       {
         "level": "entraine",
         "die": "d8",
-        "costToReach": 4,
+        "costToReach": 3,
         "talentName": "Inventeur",
         "description": "Vous pouvez fabriquer une creation simple sans materiel mais celle-ci gagne automatiquement un Trait negatif au choix du MJ. Vous pouvez convertir 2 materiaux COMMUN en 1 materiau PEU COMMUN narrativement coherent. Votre capacite de fabrication peut etre utilisee en Combat.",
         "isMalus": false,
@@ -522,7 +608,7 @@
       {
         "level": "competent",
         "die": "d10",
-        "costToReach": 6,
+        "costToReach": 5,
         "talentName": "Ingenieur",
         "description": "Vous pouvez identifier les objets, substances ou mecanismes complexes (hors OCCULTE ou AUTRE MONDE). Vous pouvez reparer ou fabriquer des objets complexes avec les materiaux appropries. Lorsque vous creez ou modifiez un objet, vous pouvez ajouter OU retirer un Trait narrativement coherent et sur reussite d'un jet d'Artisanat Difficile.",
         "isMalus": false,
@@ -531,7 +617,7 @@
       {
         "level": "maitre",
         "die": "d12",
-        "costToReach": 10,
+        "costToReach": 9,
         "talentName": "Maitre d'Oeuvre",
         "description": "Vous pouvez augmenter la qualite d'un objet sur reussite d'un jet d'Artisanat Difficile. Vos creations necessitent un materiel en moins narrativement coherent. Vous pouvez convertir 2 materiaux PEU COMMUN en 1 materiau RARE narrativement coherent. Vous pouvez appliquer 1 Effet Negatif sur une Cible si cela est narrativement coherent et sur reussite d'un jet d'Artisanat au choix du MJ.",
         "isMalus": false,

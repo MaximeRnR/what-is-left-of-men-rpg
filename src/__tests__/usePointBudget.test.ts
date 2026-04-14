@@ -39,10 +39,10 @@ describe('usePointBudget', () => {
     expect(canAllocate('archerie', 5)).toBe(true)
   })
 
-  it('cannot reach maitre tier (10 cumulative) during creation', () => {
+  it('cannot reach maitre tier (9 cumulative) during creation', () => {
     const { canAllocate } = setup()
-    expect(canAllocate('martial', 10)).toBe(false)
-    expect(canAllocate('martial', 9)).toBe(true)
+    expect(canAllocate('martial', 9)).toBe(false)
+    expect(canAllocate('martial', 8)).toBe(true)
   })
 
   it('allows reaching maitre when allowMaster is true', () => {

@@ -17,11 +17,11 @@ export type TierLevel = 'incompetent' | 'initie' | 'entraine' | 'competent' | 'm
 export const TIER_ORDER: TierLevel[] = ['incompetent', 'initie', 'entraine', 'competent', 'maitre', 'legende']
 
 export const TIER_CUMULATIVE_COST: Record<TierLevel, number> = {
-  incompetent: 1,
-  initie: 2,
-  entraine: 4,
-  competent: 6,
-  maitre: 10,
+  incompetent: 0,
+  initie: 1,
+  entraine: 3,
+  competent: 5,
+  maitre: 9,
   legende: Infinity,
 }
 

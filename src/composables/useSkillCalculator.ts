@@ -9,10 +9,6 @@ export interface SkillTierResult {
 }
 
 export function computeSkillTier(pointsSpent: number, bonusPoints: number): SkillTierResult {
-  if (pointsSpent === 0) {
-    return { tier: null, die: null, extraBonus: 0, totalBonus: bonusPoints }
-  }
-
   let currentTier: TierLevel = 'incompetent'
 
   for (const tier of TIER_ORDER) {

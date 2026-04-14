@@ -19,7 +19,6 @@ export function useCharacterStats(character: Ref<Character>) {
       const spent = character.value.skills[skillId]?.pointsSpent ?? 0
       const bonus = character.value.bonusPoints[skillId] ?? 0
       const totalPoints = spent + bonus
-      if (totalPoints === 0) continue
 
       const result = computeSkillTier(totalPoints, 0)
       if (!result.tier) continue
@@ -99,7 +98,6 @@ export function useCharacterStats(character: Ref<Character>) {
       const spent = character.value.skills[skillId]?.pointsSpent ?? 0
       const bonus = character.value.bonusPoints[skillId] ?? 0
       const totalPoints = spent + bonus
-      if (totalPoints === 0) continue
 
       const skillDef = allSkills.find(s => s.id === skillId)
       if (!skillDef) continue
