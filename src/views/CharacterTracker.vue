@@ -125,39 +125,39 @@ const attacks = computed((): AttackInfo[] => {
     const notes: string[] = []
 
     if (!isRanged && (dmgM['corps_a_corps'] ?? 0) > 0) {
-      notes.push(`+${dmgM['corps_a_corps']} degats (Force)`)
+      notes.push(`+${dmgM['corps_a_corps']} degats (Force — Mastoque)`)
     }
     if (isRanged && (dmgM['distance'] ?? 0) > 0) {
-      notes.push(`+${dmgM['distance']} degats (Archerie)`)
+      notes.push(`+${dmgM['distance']} degats (Archerie — Oeil de faucon)`)
     }
     if ((dmgM['embusque'] ?? 0) > 0) {
-      notes.push(`+${dmgM['embusque']} degats si EMBUSQUE (Ombre)`)
+      notes.push(`+${dmgM['embusque']} degats si EMBUSQUE (Ombre — Chat Gris)`)
     }
     if ((dmgM['arme_courte'] ?? 0) > 0 && weapon.category === 'legere') {
-      notes.push(`+${dmgM['arme_courte']} degats arme COURTE (Ombre)`)
+      notes.push(`+${dmgM['arme_courte']} degats arme COURTE (Ombre — Assassin)`)
     }
     if ((dmgM['poing_main_nue'] ?? 0) > 0) {
-      notes.push(`+${dmgM['poing_main_nue']} degats POING/main nue (Force)`)
+      notes.push(`+${dmgM['poing_main_nue']} degats POING/main nue (Force — Pugiliste)`)
     }
 
     // Quality note
     if (weapon.quality === 'faible_qualite') {
-      notes.push('2 des, garder le moins bon')
+      notes.push('2 des, garder le moins bon (Qualite — Faible Qualite)')
     } else if (weapon.quality === 'chef_doeuvre') {
-      notes.push('2 des, garder le meilleur')
+      notes.push('2 des, garder le meilleur (Qualite — Chef-d\'oeuvre)')
     }
 
     // Category modifier
     if (weapon.category === 'lourde') {
-      notes.push('Arme LOURDE (+1 CS)')
+      notes.push('+1 CS (Categorie — Arme LOURDE)')
     }
 
     if (postAttackMalus > 0 && !isRanged && tierResult.tier === 'incompetent') {
-      notes.push(`+${postAttackMalus} CS prochaine action martiale (Incompetent)`)
+      notes.push(`+${postAttackMalus} CS prochaine action (Martial — Violence maladroite)`)
     }
 
     if (item.currentFragility === 0) {
-      notes.push('EMOUSSEE / INUTILISABLE')
+      notes.push('EMOUSSEE / INUTILISABLE (Fragilite a 0)')
     }
 
     results.push({
