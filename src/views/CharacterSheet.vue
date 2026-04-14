@@ -26,8 +26,15 @@ const categories: { key: SkillCategory; label: string }[] = [
   { key: 'esprit', label: 'ESPRIT' },
 ]
 
+const searchQuery = ref('')
+
 function skillsByCategory(category: SkillCategory) {
-  return allSkills.filter(s => s.category === category)
+  const query = searchQuery.value.toLowerCase().trim()
+  return allSkills.filter(s => {
+    if (s.category !== category) return false
+    if (!query) return true
+    return s.name.toLowerCase().includes(query) || s.latinName.toLowerCase().includes(query)
+  })
 }
 
 function getSkillInfo(skillId: SkillId) {
@@ -90,7 +97,18 @@ function goToEdit() {
 <template>
   <div class="min-h-dvh bg-background px-4 py-6 max-w-2xl mx-auto" v-if="character">
     <header class="mb-6">
-      <h1 class="font-headline text-2xl uppercase tracking-wider text-on-surface mb-3">{{ character.name }}</h1>
+      <div class="flex items-center gap-3 mb-3">
+        <h1 class="font-headline text-2xl uppercase tracking-wider text-on-surface">{{ character.name }}</h1>
+        <div class="flex-1 relative">
+          <span class="material-symbols-outlined text-sm absolute left-2 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Filtrer competences..."
+            class="pl-8 py-1.5 text-xs w-full"
+          />
+        </div>
+      </div>
       <div class="flex flex-wrap gap-2">
         <router-link to="/" class="inline-flex items-center gap-1 text-secondary text-xs font-label uppercase tracking-widest">
           <span class="material-symbols-outlined text-sm">arrow_back</span> Retour
@@ -144,7 +162,7 @@ function goToEdit() {
       </div>
     </section>
 
-    <section v-for="cat in categories" :key="cat.key" class="mb-6">
+    <section v-for="cat in categories" :key="cat.key" class="mb-6" v-show="skillsByCategory(cat.key).length > 0">
       <h2 class="mb-3 pb-2 border-b border-outline-variant">{{ cat.label }}</h2>
 
       <div v-for="skill in skillsByCategory(cat.key)" :key="skill.id" class="bg-surface-container border border-outline-variant p-3 mb-2">
