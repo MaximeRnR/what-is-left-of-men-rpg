@@ -45,11 +45,11 @@ function removePoint(skillId: SkillId) {
   budget.value.deallocate(skillId, 1)
 }
 
-function getTierForSkill(skillId: SkillId) {
-  const result = getSkillTier(skillId)
-  if (!result.tier) return null
+function getUnlockedSpecTiers(skillId: SkillId) {
+  const spent = character.value.skills[skillId]?.pointsSpent ?? 0
   const skillDef = allSkills.find(s => s.id === skillId)
-  return skillDef?.tiers.find(t => t.level === result.tier)
+  if (!skillDef) return []
+  return skillDef.tiers.filter(t => t.costToReach <= spent && t.specializations?.length)
 }
 
 function selectSpecialization(skillId: SkillId, specId: string) {
@@ -156,16 +156,20 @@ function save() {
           </span>
         </div>
 
-        <div v-if="getTierForSkill(skill.id as SkillId)?.specializations?.length" class="mt-3 pt-3 border-t border-outline-variant">
-          <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant mb-2">Specialisation :</p>
+        <div
+          v-for="specTier in getUnlockedSpecTiers(skill.id as SkillId)"
+          :key="specTier.level"
+          class="mt-3 pt-3 border-t border-outline-variant"
+        >
+          <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant mb-2">Specialisation ({{ specTier.level }}) :</p>
           <label
-            v-for="spec in getTierForSkill(skill.id as SkillId)!.specializations"
+            v-for="spec in specTier.specializations"
             :key="spec.id"
             class="block bg-surface-container-low border border-outline-variant p-3 mb-1 cursor-pointer hover:border-primary transition-colors"
           >
             <input
               type="radio"
-              :name="`spec-${skill.id}`"
+              :name="`spec-${skill.id}-${specTier.level}`"
               :value="spec.id"
               :checked="character.specializations[skill.id as SkillId] === spec.id"
               @change="selectSpecialization(skill.id as SkillId, spec.id)"
