@@ -17,51 +17,51 @@ describe('computeSkillTier', () => {
     expect(result.extraBonus).toBe(0)
   })
 
-  it('returns initie +1 for 2 points', () => {
+  it('returns entraine for 2 points', () => {
     const result = computeSkillTier(2, 0)
-    expect(result.tier).toBe('initie')
-    expect(result.die).toBe('d6')
-    expect(result.extraBonus).toBe(1)
+    expect(result.tier).toBe('entraine')
+    expect(result.die).toBe('d8')
+    expect(result.extraBonus).toBe(0)
   })
 
-  it('returns entraine for 3 points', () => {
+  it('returns entraine +1 for 3 points', () => {
     const result = computeSkillTier(3, 0)
     expect(result.tier).toBe('entraine')
     expect(result.die).toBe('d8')
-    expect(result.extraBonus).toBe(0)
-  })
-
-  it('returns entraine +1 for 4 points', () => {
-    const result = computeSkillTier(4, 0)
-    expect(result.tier).toBe('entraine')
-    expect(result.die).toBe('d8')
     expect(result.extraBonus).toBe(1)
   })
 
-  it('returns competent for 5 points', () => {
-    const result = computeSkillTier(5, 0)
+  it('returns competent for 4 points', () => {
+    const result = computeSkillTier(4, 0)
     expect(result.tier).toBe('competent')
     expect(result.die).toBe('d10')
     expect(result.extraBonus).toBe(0)
   })
 
-  it('returns competent +3 for 8 points', () => {
-    const result = computeSkillTier(8, 0)
+  it('returns competent +2 for 6 points', () => {
+    const result = computeSkillTier(6, 0)
     expect(result.tier).toBe('competent')
     expect(result.die).toBe('d10')
-    expect(result.extraBonus).toBe(3)
+    expect(result.extraBonus).toBe(2)
   })
 
-  it('returns maitre for 9 points', () => {
-    const result = computeSkillTier(9, 0)
+  it('returns maitre for 7 points', () => {
+    const result = computeSkillTier(7, 0)
     expect(result.tier).toBe('maitre')
     expect(result.die).toBe('d12')
     expect(result.extraBonus).toBe(0)
   })
 
+  it('returns legende for 11 points', () => {
+    const result = computeSkillTier(11, 0)
+    expect(result.tier).toBe('legende')
+    expect(result.die).toBe('d20')
+    expect(result.extraBonus).toBe(0)
+  })
+
   it('adds bonusPoints to totalBonus', () => {
-    const result = computeSkillTier(2, 2)
-    expect(result.tier).toBe('initie')
+    const result = computeSkillTier(3, 2)
+    expect(result.tier).toBe('entraine')
     expect(result.extraBonus).toBe(1)
     expect(result.totalBonus).toBe(3)
   })

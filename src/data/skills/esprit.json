@@ -36,7 +36,7 @@
       {
         "level": "entraine",
         "die": "d8",
-        "costToReach": 3,
+        "costToReach": 2,
         "talentName": "Anticipation",
         "description": "Une fois par Scene, vous pouvez jouer une premiere fois avant tous les autres personnages puis lors de votre tour avec votre Souffle restant. Vos actions defensives coutent -1 CS si vous etes EMBUSQUE, ENCERCLER ou subissez une ATTAQUE D'OPPORTUNITE.",
         "isMalus": false,
@@ -45,7 +45,7 @@
       {
         "level": "competent",
         "die": "d10",
-        "costToReach": 5,
+        "costToReach": 4,
         "talentName": "Intuition strategique",
         "description": "Vous pouvez relancer votre jet d'Initiative. Une fois par Scene, vous pouvez anticiper une action ennemie, choisissez un adversaire qui subit un malus OFFENSIF ou DEFENSIF de -1 au choix.",
         "isMalus": false,
@@ -54,7 +54,7 @@
       {
         "level": "maitre",
         "die": "d12",
-        "costToReach": 9,
+        "costToReach": 7,
         "talentName": "Esprit Vif",
         "description": "Une fois par tour et si vous avez au moins 1 Souffle, vos jets de PARADE ou d'ESQUIVE ont AUGURE, vous lancez 2 des et prenez le meilleur resultat.",
         "isMalus": false,
@@ -63,7 +63,7 @@
       {
         "level": "legende",
         "die": "d20",
-        "costToReach": 999,
+        "costToReach": 11,
         "talentName": "3eme Oeil",
         "description": "Une fois par Session, vous pouvez anticiper une action ennemie majeure (attaque ou piege) et la neutraliser partiellement avant qu'elle ne se produise. Le premier tour lors d'un Combat, toutes vos actions coutent la moitie de leur CS.",
         "isMalus": false,
@@ -98,7 +98,7 @@
       {
         "level": "entraine",
         "die": "d8",
-        "costToReach": 3,
+        "costToReach": 2,
         "talentName": "Connexions inattendues",
         "description": "Une fois par Scene, vous pouvez relancer un de lors d'un jet d'ARTISANAT, de CHARISME ou de CONNAISSANCE si vous decrivez une approche creative ou detournee. Lorsque vous AIDEZ un allie, vous pouvez remplacer le bonus au des par : une reduction de CS de 2, ou l'annulation d'une contrainte narrative mineure.",
         "isMalus": false,
@@ -107,7 +107,7 @@
       {
         "level": "competent",
         "die": "d10",
-        "costToReach": 5,
+        "costToReach": 4,
         "talentName": "Improvisation brillante",
         "description": "Une fois par Scene, sur coherence narrative, vous pouvez donne AUGURE a votre prochain jet et +1 au resultat.",
         "isMalus": false,
@@ -116,7 +116,7 @@
       {
         "level": "maitre",
         "die": "d12",
-        "costToReach": 9,
+        "costToReach": 7,
         "talentName": "Genie contextuel",
         "description": "Une fois par Jour, lorsque vous proposez une idee particulierement creative pour resoudre un probleme : elle est consideree comme un succes automatique mais genere une complication nouvelle ou un cout futur decide par le MJ. Une fois par Scene, vous pouvez donner a jusqu'a 2 allies +1d4 sur leur prochain jet.",
         "isMalus": false,
@@ -125,7 +125,7 @@
       {
         "level": "legende",
         "die": "d20",
-        "costToReach": 999,
+        "costToReach": 11,
         "talentName": "Vision Transformatrice",
         "description": "L'effet de Genie contextuel devient +1d6 et peut cibler jusqu'a 3 allies. Une fois par Session et pendant une Scene, tous les allies a portee peuvent relancer un jet rate selon une justification narrative coherente.",
         "isMalus": false,
@@ -160,7 +160,7 @@
       {
         "level": "entraine",
         "die": "d8",
-        "costToReach": 3,
+        "costToReach": 2,
         "talentName": "Analyse methodique",
         "description": "Une fois par Scene, apres avoir observe ou etudie une cible, vous pouvez reveler une faiblesse exploitable : le ST de la cible est reduit de 1, ou un Malus Defensif ou Offensif de -1. Ce dernier reste actif sur la reussite d'un Jet de Connaissance chaque tours.",
         "isMalus": false,
@@ -169,7 +169,7 @@
       {
         "level": "competent",
         "die": "d10",
-        "costToReach": 5,
+        "costToReach": 4,
         "talentName": "Savoir eprouve",
         "description": "+1 PSM. Choisissez un domaine de savoir, vous obtenez +1 a vos jets le concernant. Une fois par Scene, vous pouvez recuperer 1d4 PSM ou PS.",
         "isMalus": false,
@@ -183,7 +183,7 @@
       {
         "level": "maitre",
         "die": "d12",
-        "costToReach": 9,
+        "costToReach": 7,
         "talentName": "Erudition complete",
         "description": "Vous obtenez +1 pour utiliser, comprendre ou detourner des objets COMPLEXE ou AUTRE MONDE. Une fois par Scene, lorsque vous reussissez un jet de CONNAISSANCE : vous pouvez cumuler deux effets d'Analyse methodique sur une meme cible, ou augmenter de +1 la valeur d'un malus ou d'une reduction deja appliquee par CONNAISSANCE.",
         "isMalus": false,
@@ -192,7 +192,7 @@
       {
         "level": "legende",
         "die": "d20",
-        "costToReach": 999,
+        "costToReach": 11,
         "talentName": "Cogito Ergo Sum",
         "description": "Une fois par Scene, lorsque vous ratez un jet de CONNAISSANCE, vous pouvez considerer le resultat comme un succes partiel. Choisissez un domaine de savoir, vous obtenez +1 a vos jets le concernant. Vos domaines de savoir choisis conferent desormais : +2 au lieu de +1 et une interaction secondaire (a definir par domaine).",
         "isMalus": false,
@@ -227,7 +227,7 @@
       {
         "level": "entraine",
         "die": "d8",
-        "costToReach": 3,
+        "costToReach": 2,
         "talentName": "Reconstruction logique",
         "description": "Une fois par Scene, vous pouvez relancer un jet d'INVESTIGATION. Vous pouvez utiliser votre effet PALACE MENTAL pour donner un +1 a votre prochain jet si il y a une coherence narrative.",
         "isMalus": false,
@@ -236,7 +236,7 @@
       {
         "level": "competent",
         "die": "d10",
-        "costToReach": 5,
+        "costToReach": 4,
         "talentName": "Schema explicatif",
         "description": "Pour une Scene, vous appliquez -1 ST a une cible au choix. Vous pouvez utiliser votre effet PALACE MENTAL pour appliquer -2 ST si il y a une coherence narrative mais l'effet ne dure qu'un tour.",
         "isMalus": false,
@@ -245,7 +245,7 @@
       {
         "level": "maitre",
         "die": "d12",
-        "costToReach": 9,
+        "costToReach": 7,
         "talentName": "Architecture mentale",
         "description": "Vous pouvez maintenir 2 PALACE MENTAL simultanement, mais un seul peut etre exploite par tour. Une fois par Scene, lorsque vous exploitez un PALACE MENTAL, vous pouvez faire beneficier un allie d'un +1 sur son prochain Jet d'ESPRIT.",
         "isMalus": false,
@@ -254,7 +254,7 @@
       {
         "level": "legende",
         "die": "d20",
-        "costToReach": 999,
+        "costToReach": 11,
         "talentName": "Palais de Verre",
         "description": "Une fois par Session, lorsque vous etes sous l'effet de PALACE MENTAL vous pouvez l'utiliser pour jouer 1 tour supplementaire en reaction a une action adverse. Vous obtenez un bonus de +1 a toutes vos actions pour ce tour. Vous ne recuperez que la moitie de votre Souffle au prochain tour.",
         "isMalus": false,
@@ -289,7 +289,7 @@
       {
         "level": "entraine",
         "die": "d8",
-        "costToReach": 3,
+        "costToReach": 2,
         "talentName": "Initie a l'Autre",
         "description": "+1 PSM. Une fois par Session, vous pouvez identifier 1d4 Traits d'un objet OCCULTE sur reussite d'un jet de difficulte Moyenne.",
         "isMalus": false,
@@ -303,7 +303,7 @@
       {
         "level": "competent",
         "die": "d10",
-        "costToReach": 5,
+        "costToReach": 4,
         "talentName": "Occultiste",
         "description": "Vous pouvez utiliser les objets OCCULTE sans faire de Jet d'OCCULTISME a chaque fois. Une fois par Session, vous pouvez identifier 1d4 Traits d'un objet AUTRE MONDE sur reussite d'un jet de difficulte Moyenne.",
         "isMalus": false,
@@ -312,7 +312,7 @@
       {
         "level": "maitre",
         "die": "d12",
-        "costToReach": 9,
+        "costToReach": 7,
         "talentName": "Savoir ancien",
         "description": "Vous pouvez utiliser les objets AUTRE MONDE sans faire de Jet d'OCCULTISME a chaque fois. Choisir une specialisation lors de l'acquisition.",
         "isMalus": false,
@@ -341,7 +341,7 @@
       {
         "level": "legende",
         "die": "d20",
-        "costToReach": 999,
+        "costToReach": 11,
         "talentName": "Genome Antediluvien",
         "description": "Une fois par Scene, vous gagnez AUGURE sur vos objets OCCULTE ou AUTRE MONDE. Vous gagnez +1 a vos jets qui utilisent des objets OCCULTE ou AUTRE MONDE. Choisir lors de l'acquisition : A) Sang des Geants — Gagnez +1d4 PS, B) Esprit des Anciens — Gagnez +1d4 PSM, C) Corps des Anges — Gagnez +1 Armure.",
         "isMalus": false,
@@ -376,7 +376,7 @@
       {
         "level": "entraine",
         "die": "d8",
-        "costToReach": 3,
+        "costToReach": 2,
         "talentName": "Rebouteur",
         "description": "Vos soins rendent 1 PS supplementaire. Vous pouvez stabiliser un allie en Agonie qui lui permet de rajouter +1 a ses Jets d'Agonie.",
         "isMalus": false,
@@ -385,7 +385,7 @@
       {
         "level": "competent",
         "die": "d10",
-        "costToReach": 5,
+        "costToReach": 4,
         "talentName": "Apothicaire",
         "description": "Vos soins rendent 1 PS supplementaire. Sur un jet de MEDECINE de Difficulte Moyenne reussi, vous pouvez enlever l'effet BLESSE d'une cible. Un des Jets d'Agonie d'un allie que vous traitez est automatiquement reussi. Vous pouvez cibler 2 fois par Scene pour vos soins.",
         "isMalus": false,
@@ -394,7 +394,7 @@
       {
         "level": "maitre",
         "die": "d12",
-        "costToReach": 9,
+        "costToReach": 7,
         "talentName": "Medecin-Chirurgien",
         "description": "Sur un jet de MEDECINE de Difficulte Moyenne reussi, vous pouvez reduire les Effets Negatifs PHYSIQUE de 1. Si une cible est BLESSE, vos soins rendent 1 PS supplementaire. Les Cibles de vos Soins gagnent +1 PS Temporaire et +1 Armure non cumulables jusqu'a la fin de la Scene.",
         "isMalus": false,
@@ -403,7 +403,7 @@
       {
         "level": "legende",
         "die": "d20",
-        "costToReach": 999,
+        "costToReach": 11,
         "talentName": "Saint Guerisseur",
         "description": "Vos soins se font sur 1d6. Les Cibles de vos soins gagnent desormais +2 PS Temporaire et +2 Armure non cumulables jusqu'a la fin de la Scene. Une fois par Session, vous pouvez soigner tous les allies a portee d'1d8 PS et reduire les Effets Negatifs de 1.",
         "isMalus": false,

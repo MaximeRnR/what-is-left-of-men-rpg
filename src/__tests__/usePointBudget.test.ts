@@ -39,16 +39,16 @@ describe('usePointBudget', () => {
     expect(canAllocate('archerie', 5)).toBe(true)
   })
 
-  it('cannot reach maitre tier (9 cumulative) during creation', () => {
+  it('cannot reach maitre tier (7 cumulative) during creation', () => {
     const { canAllocate } = setup()
-    expect(canAllocate('martial', 9)).toBe(false)
-    expect(canAllocate('martial', 8)).toBe(true)
+    expect(canAllocate('martial', 7)).toBe(false)
+    expect(canAllocate('martial', 6)).toBe(true)
   })
 
   it('allows reaching maitre when allowMaster is true', () => {
     const character = ref(createEmptyCharacter('test-id', 'Test'))
     const { canAllocate } = usePointBudget(character, { allowMaster: true })
-    expect(canAllocate('martial', 10)).toBe(true)
+    expect(canAllocate('martial', 8)).toBe(true)
   })
 
   it('isValid is true when budget is not exceeded and no maitre', () => {

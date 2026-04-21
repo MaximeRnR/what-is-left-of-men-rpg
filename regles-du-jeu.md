@@ -8,26 +8,26 @@
 
 A la creation, chaque personnage dispose de **15 points** a repartir librement entre toutes les competences.
 
-> **Contrainte de creation** : Aucune competence ne peut atteindre le palier **Maitre** (10 points cumules) lors de la creation du personnage.
+> **Contrainte de creation** : Aucune competence ne peut atteindre le palier **Maitre** (7 points cumules) lors de la creation du personnage.
 
 ### Schema d'evolution des paliers
 
 | Palier | De | Cout du palier | Cout cumule |
 |---|---|---|---|
-| Incompetent | d4 | 1 | 1 |
-| Initie | d6 | 1 | 2 |
-| Entraine | d8 | 2 | 4 |
-| Competent | d10 | 2 | 6 |
-| Maitre | d12 | 4 | 10 |
-| Legende | d20 | — | (hors creation) |
+| Incompetent | d4 | — | 0 |
+| Initie | d6 | 1 | 1 |
+| Entraine | d8 | 1 | 2 |
+| Competent | d10 | 2 | 4 |
+| Maitre | d12 | 3 | 7 |
+| Legende | d20 | 4 | 11 |
 
-> Le palier **Legende** est reserve a des moments narratifs exceptionnels et ne peut pas etre atteint par allocation de points standard.
+> Le palier **Legende** est reserve a des moments narratifs exceptionnels et ne peut pas etre atteint par allocation de points standard lors de la creation.
 
 ### Points bonus du Maitre de Jeu (+i)
 
 Le MJ peut accorder des **points bonus** a une competence specifique, notes `(+i)`. Ces points s'ajoutent au-dela du palier atteint par investissement normal et ameliorent le resultat des jets sans changer de palier.
 
-Exemple : une competence a 5 points investis atteint le palier **Entraine** (cout 4), avec 1 point de reste en bonus. Si le MJ ajoute (+1), le bonus total est +2 sur les jets de cette competence.
+Exemple : une competence a 5 points investis atteint le palier **Competent** (cout 4), avec 1 point de reste en bonus. Si le MJ ajoute (+1), le bonus total est +2 sur les jets de cette competence.
 
 ---
 
