@@ -129,4 +129,97 @@ describe('useCharacterStore', () => {
     store.importCharacter({ name: '  Charlie  ' })
     expect(store.characters[0].name).toBe('Charlie')
   })
+
+  it('merges story when present as string', () => {
+    const store = useCharacterStore()
+    store.importCharacter({ name: 'Dina', story: 'Un vieux soldat.' })
+    expect(store.characters[0].story).toBe('Un vieux soldat.')
+  })
+
+  it('ignores story when not a string', () => {
+    const store = useCharacterStore()
+    store.importCharacter({ name: 'Dina', story: 42 })
+    expect(store.characters[0].story).toBe('')
+  })
+
+  it('merges skills, specializations, bonusPoints when objects', () => {
+    const store = useCharacterStore()
+    store.importCharacter({
+      name: 'Eve',
+      skills: { martial: { pointsSpent: 3 } },
+      specializations: { martial: 'duelliste' },
+      bonusPoints: { archerie: 1 },
+    })
+    const c = store.characters[0]
+    expect(c.skills.martial).toEqual({ pointsSpent: 3 })
+    expect(c.specializations.martial).toBe('duelliste')
+    expect(c.bonusPoints.archerie).toBe(1)
+  })
+
+  it('ignores skills/specializations/bonusPoints when not objects', () => {
+    const store = useCharacterStore()
+    store.importCharacter({
+      name: 'Frank',
+      skills: 'not-an-object',
+      specializations: [1, 2],
+      bonusPoints: null,
+    })
+    const c = store.characters[0]
+    expect(c.skills.martial).toEqual({ pointsSpent: 0 })
+    expect(c.specializations).toEqual({})
+    expect(c.bonusPoints).toEqual({})
+  })
+
+  it('merges inventory and abilities when arrays', () => {
+    const store = useCharacterStore()
+    store.importCharacter({
+      name: 'Gwen',
+      inventory: [{ id: 'x', weaponId: 'sword', traits: [], currentFragility: 0 }],
+      abilities: [{ id: 'a1', title: 'Vision', description: 'voit loin' }],
+    })
+    const c = store.characters[0]
+    expect(c.inventory).toHaveLength(1)
+    expect(c.abilities).toHaveLength(1)
+    expect(c.abilities[0].title).toBe('Vision')
+  })
+
+  it('ignores inventory/abilities when not arrays', () => {
+    const store = useCharacterStore()
+    store.importCharacter({ name: 'Ian', inventory: 'nope', abilities: {} })
+    expect(store.characters[0].inventory).toEqual([])
+    expect(store.characters[0].abilities).toEqual([])
+  })
+
+  it('merges tracker field by field on top of defaults', () => {
+    const store = useCharacterStore()
+    store.importCharacter({
+      name: 'Jane',
+      tracker: { currentHP: 5, activeEffects: ['blessé'] },
+    })
+    const t = store.characters[0].tracker
+    expect(t.currentHP).toBe(5)
+    expect(t.currentSanity).toBe(10)
+    expect(t.currentSouffle).toBe(10)
+    expect(t.activeEffects).toEqual(['blessé'])
+  })
+
+  it('ignores tracker when not an object', () => {
+    const store = useCharacterStore()
+    store.importCharacter({ name: 'Kim', tracker: 'nope' })
+    expect(store.characters[0].tracker).toEqual({
+      currentHP: 10, currentSanity: 10, currentSouffle: 10, activeEffects: [],
+    })
+  })
+
+  it('ignores tracker sub-fields with wrong types', () => {
+    const store = useCharacterStore()
+    store.importCharacter({
+      name: 'Leo',
+      tracker: { currentHP: 'seven', activeEffects: 'not-array', currentSanity: 3 },
+    })
+    const t = store.characters[0].tracker
+    expect(t.currentHP).toBe(10)
+    expect(t.currentSanity).toBe(3)
+    expect(t.activeEffects).toEqual([])
+  })
 })

@@ -36,6 +36,10 @@ function saveToStorage(state: CharacterStoreState): void {
   }))
 }
 
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
 export const useCharacterStore = defineStore('characters', {
   state: (): CharacterStoreState => loadFromStorage(),
 
@@ -98,6 +102,33 @@ export const useCharacterStore = defineStore('characters', {
         throw new Error("le champ 'name' est manquant ou vide")
       }
       const char = createEmptyCharacter(generateId(), obj.name.trim())
+
+      if (typeof obj.story === 'string') {
+        char.story = obj.story
+      }
+      if (isPlainObject(obj.skills)) {
+        char.skills = obj.skills as Character['skills']
+      }
+      if (isPlainObject(obj.specializations)) {
+        char.specializations = obj.specializations as Character['specializations']
+      }
+      if (isPlainObject(obj.bonusPoints)) {
+        char.bonusPoints = obj.bonusPoints as Character['bonusPoints']
+      }
+      if (Array.isArray(obj.inventory)) {
+        char.inventory = obj.inventory as Character['inventory']
+      }
+      if (Array.isArray(obj.abilities)) {
+        char.abilities = obj.abilities as Character['abilities']
+      }
+      if (isPlainObject(obj.tracker)) {
+        const t = obj.tracker as Record<string, unknown>
+        if (typeof t.currentHP === 'number') char.tracker.currentHP = t.currentHP
+        if (typeof t.currentSanity === 'number') char.tracker.currentSanity = t.currentSanity
+        if (typeof t.currentSouffle === 'number') char.tracker.currentSouffle = t.currentSouffle
+        if (Array.isArray(t.activeEffects)) char.tracker.activeEffects = t.activeEffects as string[]
+      }
+
       this.characters.push(char)
       this._persist()
       return char.id
