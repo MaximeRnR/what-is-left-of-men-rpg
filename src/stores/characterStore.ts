@@ -89,6 +89,20 @@ export const useCharacterStore = defineStore('characters', {
       return dupe
     },
 
+    importCharacter(data: unknown): string {
+      if (data === null || typeof data !== 'object' || Array.isArray(data)) {
+        throw new Error('le fichier doit contenir un objet personnage')
+      }
+      const obj = data as Record<string, unknown>
+      if (typeof obj.name !== 'string' || obj.name.trim() === '') {
+        throw new Error("le champ 'name' est manquant ou vide")
+      }
+      const char = createEmptyCharacter(generateId(), obj.name.trim())
+      this.characters.push(char)
+      this._persist()
+      return char.id
+    },
+
     _persist(): void {
       saveToStorage({ characters: this.characters, activeCharacterId: this.activeCharacterId })
     },

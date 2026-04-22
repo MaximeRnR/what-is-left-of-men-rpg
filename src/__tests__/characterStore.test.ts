@@ -79,4 +79,54 @@ describe('useCharacterStore', () => {
     store.deleteCharacter(char.id)
     expect(store.activeCharacterId).toBeNull()
   })
+
+  it('imports a character with only a name', () => {
+    const store = useCharacterStore()
+    const id = store.importCharacter({ name: 'Alice' })
+    expect(store.characters).toHaveLength(1)
+    const imported = store.characters[0]
+    expect(imported.id).toBe(id)
+    expect(imported.name).toBe('Alice')
+    expect(imported.skills.martial).toEqual({ pointsSpent: 0 })
+    expect(imported.tracker).toEqual({ currentHP: 10, currentSanity: 10, currentSouffle: 10, activeEffects: [] })
+    expect(imported.inventory).toEqual([])
+    expect(imported.abilities).toEqual([])
+  })
+
+  it('regenerates id and timestamps on import', () => {
+    const store = useCharacterStore()
+    const id = store.importCharacter({
+      id: 'fake-id-from-file',
+      name: 'Bob',
+      createdAt: 1000,
+      updatedAt: 2000,
+    })
+    const imported = store.characters[0]
+    expect(imported.id).toBe(id)
+    expect(imported.id).not.toBe('fake-id-from-file')
+    expect(imported.createdAt).toBeGreaterThan(2000)
+    expect(imported.updatedAt).toBeGreaterThan(2000)
+  })
+
+  it('throws on non-object data', () => {
+    const store = useCharacterStore()
+    expect(() => store.importCharacter(null)).toThrow()
+    expect(() => store.importCharacter('string')).toThrow()
+    expect(() => store.importCharacter([1, 2, 3])).toThrow()
+    expect(() => store.importCharacter(42)).toThrow()
+  })
+
+  it('throws on missing or empty name', () => {
+    const store = useCharacterStore()
+    expect(() => store.importCharacter({})).toThrow(/name/)
+    expect(() => store.importCharacter({ name: '' })).toThrow(/name/)
+    expect(() => store.importCharacter({ name: '   ' })).toThrow(/name/)
+    expect(() => store.importCharacter({ name: 42 })).toThrow(/name/)
+  })
+
+  it('trims the name on import', () => {
+    const store = useCharacterStore()
+    store.importCharacter({ name: '  Charlie  ' })
+    expect(store.characters[0].name).toBe('Charlie')
+  })
 })
