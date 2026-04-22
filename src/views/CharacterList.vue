@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useCharacterStore } from '../stores/characterStore'
 import { useRouter } from 'vue-router'
 
 const store = useCharacterStore()
 const router = useRouter()
+const fileInput = ref<HTMLInputElement | null>(null)
 
 function createNew() {
   router.push('/character/new')
@@ -18,6 +20,42 @@ function deleteCharacter(id: string) {
 function selectCharacter(id: string) {
   store.setActiveCharacter(id)
   router.push(`/character/${id}`)
+}
+
+function triggerImport() {
+  fileInput.value?.click()
+}
+
+function onFileSelected(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+
+  const reader = new FileReader()
+  reader.onload = () => {
+    let parsed: unknown
+    try {
+      parsed = JSON.parse(reader.result as string)
+    } catch {
+      alert("Fichier invalide : le contenu n'est pas du JSON valide.")
+      input.value = ''
+      return
+    }
+    try {
+      const newId = store.importCharacter(parsed)
+      input.value = ''
+      router.push(`/character/${newId}`)
+    } catch (e) {
+      const message = e instanceof Error ? e.message : String(e)
+      alert('Fichier invalide : ' + message)
+      input.value = ''
+    }
+  }
+  reader.onerror = () => {
+    alert('Impossible de lire le fichier.')
+    input.value = ''
+  }
+  reader.readAsText(file)
 }
 </script>
 
@@ -48,11 +86,23 @@ function selectCharacter(id: string) {
       </li>
     </ul>
 
-    <div class="mt-8">
-      <button class="primary w-full py-3" @click="createNew">
+    <div class="mt-8 grid grid-cols-2 gap-2">
+      <button class="primary py-3" @click="createNew">
         <span class="material-symbols-outlined text-sm mr-1">add</span>
-        Nouveau Personnage
+        Nouveau
+      </button>
+      <button class="py-3" @click="triggerImport">
+        <span class="material-symbols-outlined text-sm mr-1">upload</span>
+        Importer
       </button>
     </div>
+
+    <input
+      ref="fileInput"
+      type="file"
+      accept=".json,application/json"
+      class="hidden"
+      @change="onFileSelected"
+    />
   </div>
 </template>
