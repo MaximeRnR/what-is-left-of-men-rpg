@@ -210,6 +210,32 @@ function scrollToTalent(anchorId: string) {
 function goToEdit() {
   router.push(`/character/${characterId}/edit`)
 }
+
+function slugify(name: string): string {
+  const slug = name
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+  return slug || 'personnage'
+}
+
+function exportCharacter() {
+  if (!character.value) return
+  const json = JSON.stringify(character.value, null, 2)
+  const blob = new Blob([json], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `${slugify(character.value.name)}.json`
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+}
 </script>
 
 <template>
@@ -243,6 +269,9 @@ function goToEdit() {
         <router-link :to="`/character/${characterId}/abilities`" class="flex items-center justify-center gap-1 text-secondary text-xs font-label uppercase tracking-widest py-2 border border-outline-variant">
           <span class="material-symbols-outlined text-sm">auto_awesome</span> Capacites
         </router-link>
+        <button @click="exportCharacter" class="flex items-center justify-center gap-1">
+          <span class="material-symbols-outlined text-sm">download</span> Exporter
+        </button>
       </div>
       <div class="border-t border-outline-variant mt-3"></div>
     </header>
