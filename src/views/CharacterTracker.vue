@@ -7,6 +7,8 @@ import { useCombatTracker } from '../composables/useCombatTracker'
 import { computeSkillTier } from '../composables/useSkillCalculator'
 import { getWeaponById } from '../data/weapons'
 import type { InventoryItem } from '../models/character'
+import type { WeaponDefinition } from '../models/weapon'
+import { useActionCosts, type ActionCostConditions } from '../composables/useActionCosts'
 
 const route = useRoute()
 const store = useCharacterStore()
@@ -20,6 +22,28 @@ watch(character, (val) => { if (val) characterRef.value = val }, { deep: true })
 const stats = useCharacterStats(characterRef)
 
 const tracker = useCombatTracker(characterRef, stats.maxHP, stats.maxSanity, stats.maxSouffle)
+
+const conditions = ref<ActionCostConditions>({
+  embusque: false,
+  encercle: false,
+  attaqueOpportuniteSubie: false,
+  memeCible: false,
+  sansFocus: false,
+  apresParadeEsquive: false,
+  premierTourLegende: false,
+})
+
+const actionCosts = useActionCosts(characterRef, stats, conditions)
+
+const toggleLabels: Record<keyof ActionCostConditions, string> = {
+  embusque: 'EMBUSQUE',
+  encercle: 'ENCERCLE',
+  attaqueOpportuniteSubie: 'Attaque d\'opportunite subie',
+  memeCible: 'Meme cible que la precedente',
+  sansFocus: 'Cible non-Focus',
+  apresParadeEsquive: 'Apres parade/esquive reussie',
+  premierTourLegende: '1er tour Legende',
+}
 
 function persist() {
   store.updateCharacter(characterId, {
@@ -55,13 +79,13 @@ const commonEffects = ['BLESSE', 'PEUR', 'EBRANLE', 'CONFUS', 'DESESPERE', 'OMBR
 // === Attack list from inventory ===
 interface AttackInfo {
   item: InventoryItem
+  weapon: WeaponDefinition
   weaponName: string
   damage: string
   skillDie: string
   skillTier: string
   skillName: string
   rollBonus: number
-  baseCost: number  // CS after modifiers
   souffleModifier: number
   category: string
   quality: string
@@ -92,29 +116,9 @@ const attacks = computed((): AttackInfo[] => {
     const spent = character.value.skills[skillId]?.pointsSpent ?? 0
     const tierResult = computeSkillTier(spent, 0)
 
-    // Base attack cost = 6 CS
-    let baseCost = 6
-
-    // CS modifiers from talents (only apply bonuses, not incompetent malus which are handled separately)
+    // Post-attack malus note (martial incompetent only)
     const csM = stats.csModifiers.value
-    if (!isRanged) {
-      // Martial entraine: -1 CS attaque melee
-      if (tierResult.tier !== 'incompetent') {
-        baseCost += (csM['attaque_melee'] ?? 0)
-      }
-    } else {
-      // Archerie incompetent: +1 CS attaque distance (only if incompetent)
-      // Archerie entraine+: reductions
-      baseCost += (csM['attaque_distance'] ?? 0)
-    }
-
-    // Post-attack malus (martial incompetent only)
     const postAttackMalus = csM['post_attaque_martiale'] ?? 0
-
-    // Weapon souffle modifier
-    const totalCost = baseCost + weapon.souffleModifier
-    // CS minimum 2
-    const finalCost = Math.max(2, totalCost)
 
     // Roll bonus (extra points beyond tier)
     const rollBonus = tierResult.extraBonus
@@ -161,13 +165,13 @@ const attacks = computed((): AttackInfo[] => {
 
     results.push({
       item,
+      weapon,
       weaponName: weapon.name,
       damage: weapon.damage,
       skillDie: tierResult.die ?? 'd4',
       skillTier: tierResult.tier ?? 'incompetent',
       skillName,
       rollBonus,
-      baseCost: finalCost,
       souffleModifier: weapon.souffleModifier,
       category: weapon.category,
       quality: weapon.quality,
@@ -272,6 +276,36 @@ const dieColorMap: Record<string, string> = {
       </div>
     </section>
 
+    <!-- Active conditions toggles -->
+    <section v-if="actionCosts.applicableToggles.value.length > 0" class="bg-surface-container border border-outline-variant p-4 mb-4">
+      <h2 class="mb-3">Conditions actives</h2>
+      <div class="flex flex-col gap-2">
+        <label
+          v-for="key in actionCosts.applicableToggles.value"
+          :key="key"
+          class="flex items-center gap-2 cursor-pointer text-sm"
+        >
+          <input type="checkbox" v-model="conditions[key]" class="w-4 h-4" />
+          <span>{{ toggleLabels[key] }}</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Generic actions (Esquive, Special) -->
+    <section class="bg-surface-container border border-outline-variant p-4 mb-4">
+      <h2 class="mb-3">Actions generales</h2>
+      <div class="grid grid-cols-2 gap-2">
+        <div class="bg-surface-container-low p-2 text-center">
+          <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Esquive</p>
+          <p class="die-display font-bold text-tertiary">{{ actionCosts.dodgeCost() }} CS</p>
+        </div>
+        <div class="bg-surface-container-low p-2 text-center">
+          <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Special</p>
+          <p class="die-display font-bold text-tertiary">{{ actionCosts.specialCost() }} CS</p>
+        </div>
+      </div>
+    </section>
+
     <!-- Attacks -->
     <section class="bg-surface-container border border-outline-variant p-4 mb-4">
       <h2 class="mb-3">Attaques</h2>
@@ -289,7 +323,7 @@ const dieColorMap: Record<string, string> = {
           </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-2 mb-2">
+        <div class="grid grid-cols-2 gap-2 mb-2">
           <!-- Skill die -->
           <div class="bg-surface-container-low p-2 text-center">
             <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">{{ atk.skillName }}</p>
@@ -302,13 +336,30 @@ const dieColorMap: Record<string, string> = {
             <p class="die-display font-bold text-primary">{{ atk.damage }}</p>
             <p class="font-label text-xs text-on-surface-variant">{{ qualityLabels[atk.quality] }}</p>
           </div>
-          <!-- Cost -->
-          <div class="bg-surface-container-low p-2 text-center">
-            <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Cout</p>
-            <p class="die-display font-bold text-tertiary">{{ atk.baseCost }} CS</p>
-            <p class="font-label text-xs text-on-surface-variant">Fragilite: {{ atk.fragility }}</p>
+        </div>
+
+        <!-- Action cost buttons -->
+        <div class="flex flex-wrap gap-2 mb-2">
+          <div class="bg-surface-container-low p-2 text-center flex-1 min-w-[70px]">
+            <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Attaque 1ere</p>
+            <p class="die-display font-bold text-tertiary">{{ actionCosts.attackCost(atk.weapon, true) }} CS</p>
+          </div>
+          <div class="bg-surface-container-low p-2 text-center flex-1 min-w-[60px]">
+            <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">2e</p>
+            <p class="die-display font-bold text-tertiary">{{ actionCosts.attackCost(atk.weapon, false) }} CS</p>
+          </div>
+          <div class="bg-surface-container-low p-2 text-center flex-1 min-w-[60px]">
+            <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">3e</p>
+            <p class="die-display font-bold text-tertiary">{{ actionCosts.attackCost(atk.weapon, false) }} CS</p>
+          </div>
+          <div class="bg-surface-container-low p-2 text-center flex-1 min-w-[70px]">
+            <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Parade</p>
+            <p class="die-display font-bold text-tertiary">{{ actionCosts.parryCost(atk.weapon) }} CS</p>
           </div>
         </div>
+
+        <!-- Fragility info (moved out of grid since cost cell is gone) -->
+        <p class="text-xs text-on-surface-variant mb-2">Fragilite : {{ atk.fragility }}</p>
 
         <!-- Special effects -->
         <div v-if="atk.specialEffects.length > 0" class="flex flex-wrap gap-1 mb-2">

@@ -40,7 +40,13 @@
         "talentName": "Anticipation",
         "description": "Une fois par Scene, vous pouvez jouer une premiere fois avant tous les autres personnages puis lors de votre tour avec votre Souffle restant. Vos actions defensives coutent -1 CS si vous etes EMBUSQUE, ENCERCLER ou subissez une ATTAQUE D'OPPORTUNITE.",
         "isMalus": false,
-        "passiveEffects": []
+        "passiveEffects": [
+          {
+            "type": "cs_modifier",
+            "value": -1,
+            "condition": "defense_embusque_encerle_aoo"
+          }
+        ]
       },
       {
         "level": "competent",
