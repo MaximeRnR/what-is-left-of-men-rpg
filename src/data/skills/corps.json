@@ -27,7 +27,13 @@
         "talentName": "Gestes appris",
         "description": "La premiere ATTAQUE du combat coute -1 CS.",
         "isMalus": false,
-        "passiveEffects": []
+        "passiveEffects": [
+          {
+            "type": "cs_modifier",
+            "value": -1,
+            "condition": "attaque_premiere_melee"
+          }
+        ]
       },
       {
         "level": "entraine",
@@ -62,7 +68,13 @@
             "id": "pression",
             "name": "Pression",
             "description": "Une fois par Tour, si votre ATTAQUE touche, la prochaine ATTAQUE contre cette cible coute -1 CS.",
-            "passiveEffects": []
+            "passiveEffects": [
+              {
+                "type": "cs_modifier",
+                "value": -1,
+                "condition": "meme_cible"
+              }
+            ]
           },
           {
             "id": "discipline",
@@ -120,7 +132,13 @@
         "talentName": "Reflexe Oculaire",
         "description": "La premiere ATTAQUE a distance du combat coute -1 CS.",
         "isMalus": false,
-        "passiveEffects": []
+        "passiveEffects": [
+          {
+            "type": "cs_modifier",
+            "value": -1,
+            "condition": "attaque_premiere_distance"
+          }
+        ]
       },
       {
         "level": "entraine",
