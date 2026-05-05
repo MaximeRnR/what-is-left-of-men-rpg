@@ -314,8 +314,17 @@ function exportCharacter() {
         </div>
         <div class="bg-surface-container border border-outline-variant p-3 text-center">
           <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Souffle</p>
-          <p class="die-display text-tertiary">{{ stats.maxSouffle.value }}</p>
-          <div class="h-1 bg-surface-container-lowest mt-2"><div class="stat-bar-fill souffle h-full w-full"></div></div>
+          <p class="flex items-baseline justify-center gap-1">
+            <span class="die-display text-tertiary">{{ character.tracker.currentSouffle }}</span>
+            <span class="text-on-surface-variant text-sm">/</span>
+            <span class="font-headline text-on-surface-variant text-sm">{{ stats.maxSouffle.value }}</span>
+          </p>
+          <div class="h-1 bg-surface-container-lowest mt-2">
+            <div
+              class="stat-bar-fill souffle h-full"
+              :style="{ width: stats.maxSouffle.value > 0 ? `${Math.min(100, (character.tracker.currentSouffle / stats.maxSouffle.value) * 100)}%` : '0%' }"
+            ></div>
+          </div>
         </div>
       </div>
       <div class="flex gap-2 mt-2" v-if="stats.stModifier.value !== 0 || stats.initiativeModifier.value !== 0">
