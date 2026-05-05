@@ -75,10 +75,10 @@ export function useActionCosts(
     return 0
   }
 
-  function lourdePenalty(weapon: WeaponDefinition): number {
+  function lourdeCancellation(weapon: WeaponDefinition): number {
     if (weapon.category !== 'lourde') return 0
-    if (hasReachedTier(character.value, 'force', 'maitre')) return 0
-    return 1
+    if (!hasReachedTier(character.value, 'force', 'maitre')) return 0
+    return -1
   }
 
   function applyLegendeOverride(cost: number): number {
@@ -107,13 +107,13 @@ export function useActionCosts(
       const firstKey = weapon.ranged ? 'attaque_premiere_distance' : 'attaque_premiere_melee'
       cost += csModifierFor(firstKey)
     }
-    cost += lourdePenalty(weapon)
+    cost += lourdeCancellation(weapon)
     return applyFloor(applyLegendeOverride(cost))
   }
 
   function parryCost(weapon: WeaponDefinition): number {
     let cost = BASE_PARRY + (weapon.souffleModifier ?? 0) + parryPassive() + defenseConditionalDelta()
-    cost += lourdePenalty(weapon)
+    cost += lourdeCancellation(weapon)
     return applyFloor(applyLegendeOverride(cost))
   }
 

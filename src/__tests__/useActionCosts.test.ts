@@ -275,22 +275,26 @@ describe('useActionCosts — overrides and floor', () => {
 })
 
 describe('useActionCosts — LOURDE category', () => {
+  // In the real data, LOURDE weapons always have souffleModifier: 1 (the +1 CS LOURDE penalty
+  // is data-driven, not added by the composable). Tests use souffleModifier: 1 to mirror reality.
+  const lourde = () => makeWeapon({ category: 'lourde', souffleModifier: 1 })
+
   it('weapon LOURDE adds +1 CS to attack and parry', () => {
     const { costs } = setup()
-    expect(costs.attackCost(makeWeapon({ category: 'lourde' }), false)).toBe(7)
-    expect(costs.parryCost(makeWeapon({ category: 'lourde' }))).toBe(5)
+    expect(costs.attackCost(lourde(), false)).toBe(7)
+    expect(costs.parryCost(lourde())).toBe(5)
   })
 
   it('Force Maitre (Colosse) cancels the +1 LOURDE penalty', () => {
     // force 7 = maitre. The talent text says LOURDE armes have no CS malus.
     const { costs } = setup({ force: 7 })
-    expect(costs.attackCost(makeWeapon({ category: 'lourde' }), false)).toBe(6)
-    expect(costs.parryCost(makeWeapon({ category: 'lourde' }))).toBe(4)
+    expect(costs.attackCost(lourde(), false)).toBe(6)
+    expect(costs.parryCost(lourde())).toBe(4)
   })
 
   it('LOURDE penalty applies to non-Force-Maitre characters', () => {
     const { costs } = setup({ force: 4 })  // competent, not maitre
-    expect(costs.attackCost(makeWeapon({ category: 'lourde' }), false)).toBe(7)
+    expect(costs.attackCost(lourde(), false)).toBe(7)
   })
 })
 
