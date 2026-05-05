@@ -286,18 +286,45 @@ function exportCharacter() {
       <div class="grid grid-cols-3 gap-2">
         <div class="bg-surface-container border border-outline-variant p-3 text-center">
           <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">PS</p>
-          <p class="die-display text-primary">{{ stats.maxHP.value }}</p>
-          <div class="h-1 bg-surface-container-lowest mt-2"><div class="stat-bar-fill hp h-full w-full"></div></div>
+          <p class="flex items-baseline justify-center gap-1">
+            <span class="die-display text-primary">{{ character.tracker.currentHP }}</span>
+            <span class="text-on-surface-variant text-sm">/</span>
+            <span class="font-headline text-on-surface-variant text-sm">{{ stats.maxHP.value }}</span>
+          </p>
+          <div class="h-1 bg-surface-container-lowest mt-2">
+            <div
+              class="stat-bar-fill hp h-full"
+              :style="{ width: stats.maxHP.value > 0 ? `${Math.min(100, (character.tracker.currentHP / stats.maxHP.value) * 100)}%` : '0%' }"
+            ></div>
+          </div>
         </div>
         <div class="bg-surface-container border border-outline-variant p-3 text-center">
           <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">PSM</p>
-          <p class="die-display text-secondary">{{ stats.maxSanity.value }}</p>
-          <div class="h-1 bg-surface-container-lowest mt-2"><div class="stat-bar-fill sanity h-full w-full"></div></div>
+          <p class="flex items-baseline justify-center gap-1">
+            <span class="die-display text-secondary">{{ character.tracker.currentSanity }}</span>
+            <span class="text-on-surface-variant text-sm">/</span>
+            <span class="font-headline text-on-surface-variant text-sm">{{ stats.maxSanity.value }}</span>
+          </p>
+          <div class="h-1 bg-surface-container-lowest mt-2">
+            <div
+              class="stat-bar-fill sanity h-full"
+              :style="{ width: stats.maxSanity.value > 0 ? `${Math.min(100, (character.tracker.currentSanity / stats.maxSanity.value) * 100)}%` : '0%' }"
+            ></div>
+          </div>
         </div>
         <div class="bg-surface-container border border-outline-variant p-3 text-center">
           <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Souffle</p>
-          <p class="die-display text-tertiary">{{ stats.maxSouffle.value }}</p>
-          <div class="h-1 bg-surface-container-lowest mt-2"><div class="stat-bar-fill souffle h-full w-full"></div></div>
+          <p class="flex items-baseline justify-center gap-1">
+            <span class="die-display text-tertiary">{{ character.tracker.currentSouffle }}</span>
+            <span class="text-on-surface-variant text-sm">/</span>
+            <span class="font-headline text-on-surface-variant text-sm">{{ stats.maxSouffle.value }}</span>
+          </p>
+          <div class="h-1 bg-surface-container-lowest mt-2">
+            <div
+              class="stat-bar-fill souffle h-full"
+              :style="{ width: stats.maxSouffle.value > 0 ? `${Math.min(100, (character.tracker.currentSouffle / stats.maxSouffle.value) * 100)}%` : '0%' }"
+            ></div>
+          </div>
         </div>
       </div>
       <div class="flex gap-2 mt-2" v-if="stats.stModifier.value !== 0 || stats.initiativeModifier.value !== 0">
