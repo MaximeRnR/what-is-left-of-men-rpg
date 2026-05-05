@@ -300,8 +300,17 @@ function exportCharacter() {
         </div>
         <div class="bg-surface-container border border-outline-variant p-3 text-center">
           <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">PSM</p>
-          <p class="die-display text-secondary">{{ stats.maxSanity.value }}</p>
-          <div class="h-1 bg-surface-container-lowest mt-2"><div class="stat-bar-fill sanity h-full w-full"></div></div>
+          <p class="flex items-baseline justify-center gap-1">
+            <span class="die-display text-secondary">{{ character.tracker.currentSanity }}</span>
+            <span class="text-on-surface-variant text-sm">/</span>
+            <span class="font-headline text-on-surface-variant text-sm">{{ stats.maxSanity.value }}</span>
+          </p>
+          <div class="h-1 bg-surface-container-lowest mt-2">
+            <div
+              class="stat-bar-fill sanity h-full"
+              :style="{ width: stats.maxSanity.value > 0 ? `${Math.min(100, (character.tracker.currentSanity / stats.maxSanity.value) * 100)}%` : '0%' }"
+            ></div>
+          </div>
         </div>
         <div class="bg-surface-container border border-outline-variant p-3 text-center">
           <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Souffle</p>
