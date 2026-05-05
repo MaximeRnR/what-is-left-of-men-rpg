@@ -286,8 +286,17 @@ function exportCharacter() {
       <div class="grid grid-cols-3 gap-2">
         <div class="bg-surface-container border border-outline-variant p-3 text-center">
           <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">PS</p>
-          <p class="die-display text-primary">{{ stats.maxHP.value }}</p>
-          <div class="h-1 bg-surface-container-lowest mt-2"><div class="stat-bar-fill hp h-full w-full"></div></div>
+          <p class="flex items-baseline justify-center gap-1">
+            <span class="die-display text-primary">{{ character.tracker.currentHP }}</span>
+            <span class="text-on-surface-variant text-sm">/</span>
+            <span class="font-headline text-on-surface-variant text-sm">{{ stats.maxHP.value }}</span>
+          </p>
+          <div class="h-1 bg-surface-container-lowest mt-2">
+            <div
+              class="stat-bar-fill hp h-full"
+              :style="{ width: stats.maxHP.value > 0 ? `${Math.min(100, (character.tracker.currentHP / stats.maxHP.value) * 100)}%` : '0%' }"
+            ></div>
+          </div>
         </div>
         <div class="bg-surface-container border border-outline-variant p-3 text-center">
           <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">PSM</p>
