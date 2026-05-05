@@ -194,6 +194,17 @@ describe('useActionCosts — conditional toggles', () => {
     conditions.value.encercle = true
     expect(costs.parryCost(makeWeapon())).toBe(3)  // not 2
   })
+
+  it('embusque toggle has NO CS effect with only Ombre Maitre (Chat Gris adds damage, not CS)', () => {
+    const { conditions, costs } = setup({ ombre: 7 })
+    // Ombre Maitre exposes the embusque toggle (Chat Gris context), but it's a damage modifier
+    // not a cs_modifier — parry/dodge cost should be unchanged.
+    expect(costs.parryCost(makeWeapon())).toBe(4)
+    expect(costs.dodgeCost()).toBe(6)
+    conditions.value.embusque = true
+    expect(costs.parryCost(makeWeapon())).toBe(4)
+    expect(costs.dodgeCost()).toBe(6)
+  })
 })
 
 describe('useActionCosts — overrides and floor', () => {
@@ -243,18 +254,17 @@ describe('useActionCosts — overrides and floor', () => {
   })
 
   it('floor: cost cannot go below 2 CS (except Maitre Martial 3 CS fixed alone)', () => {
-    // Stack many bonuses to push cost below 2
-    // martial 11 = legende (incl entraine -1 melee, -1 parade); also martial initie -1 first attack.
-    // First attack: 6 - 1 (entraine) - 1 (initie) = 4. Add -1 meme_cible if pression chosen.
+    // Stack bonuses + a -1 souffleModifier weapon to push natural cost below 2.
+    // martial 11 = legende (incl initie -1 first, entraine -1 melee); ombre with assassin spec adds sans_focus.
+    // First attack natural sum: 6 + (-1 souffle) + (-1 attaque_melee) + (-1 meme_cible) + (-1 sans_focus) + (-1 attaque_premiere_melee) = 1.
+    // Floor clamps to 2.
     const { conditions, costs } = setup(
       { martial: 11, ombre: 4 },
       { martial: 'pression', ombre: 'assassin' },
     )
     conditions.value.memeCible = true
     conditions.value.sansFocus = true
-    // 6 + (-1 attaque_melee) + (-1 meme_cible) + (-1 sans_focus) + (-1 attaque_premiere_melee on first)
-    // = 6 - 4 = 2. Floor respected.
-    expect(costs.attackCost(makeWeapon(), true)).toBe(2)
+    expect(costs.attackCost(makeWeapon({ souffleModifier: -1 }), true)).toBe(2)
   })
 
   it('Maitre Martial 3 CS alone is NOT floored to 2 (stays at 3)', () => {
