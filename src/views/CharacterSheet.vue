@@ -148,11 +148,9 @@ const ROLL_BONUSES: Omit<RollBonus, 'value'>[] = [
   { skillId: 'courage', tier: 'entraine', conditional: true, label: 'Prochain jet allie (1x/Scene)' },
   { skillId: 'courage', tier: 'legende', conditional: true, label: 'COURAGE allies a portee' },
   { skillId: 'perception', tier: 'initie', conditional: false, label: 'Jets de Perception' },
-  { skillId: 'perception', tier: 'entraine', conditional: false, label: 'Initiative' },
   { skillId: 'perception', tier: 'competent', conditional: true, label: 'Toucher cible designee' },
   { skillId: 'tromperie', tier: 'entraine', conditional: true, label: 'Jets TROMPERIE (par Charisme)' },
   // ESPRIT
-  { skillId: 'instinct', tier: 'initie', conditional: false, label: 'Initiative' },
   { skillId: 'creativite', tier: 'competent', conditional: true, label: 'Resultat (AUGURE, 1x/Scene)' },
   { skillId: 'connaissance', tier: 'initie', conditional: true, label: 'Domaine de savoir choisi' },
   { skillId: 'connaissance', tier: 'competent', conditional: true, label: '2e domaine de savoir' },
