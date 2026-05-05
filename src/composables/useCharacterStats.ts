@@ -28,6 +28,7 @@ export function useCharacterStats(character: Ref<Character>) {
 
       for (const tier of skillDef.tiers) {
         if (tier.costToReach > totalPoints) break
+        if (tier.isMalus && totalPoints > 0) continue
         effects.push(...tier.passiveEffects)
 
         // Add specialization effects if chosen and this tier has specializations

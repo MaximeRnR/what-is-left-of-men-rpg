@@ -33,14 +33,12 @@ describe('useCharacterStats', () => {
     expect(stats.initiativeModifier.value).toBe(-2)
   })
 
-  it('adds HP from endurance tiers (cumulative)', () => {
-    // Endurance at 5 points = competent: incompetent(-1) + initie(+1) + entraine(+1) + competent(+1) = +2
-    // Base 9 (from other incompetent malus) + 2 net from endurance tiers = 9 - (-1) + 2 = 9 + 3 = 12
-    // Actually: all skills at incompetent gives -1 HP from endurance. Now endurance at 5 gives full chain.
-    // Total HP effects: endurance(-1+1+1+1) = +2 net from endurance. Other skills: no HP effects.
-    // So: 10 + 2 = 12
+  it('adds HP from endurance tiers (incompetent malus skipped once trained)', () => {
+    // Endurance at 5 = competent. Incompetent malus is skipped (totalPoints > 0).
+    // initie(+1) + entraine(+1) + competent(+1) = +3 HP from endurance.
+    // No other skill contributes HP. Total: 10 + 3 = 13.
     const stats = setup({ endurance: 5 })
-    expect(stats.maxHP.value).toBe(12)
+    expect(stats.maxHP.value).toBe(13)
   })
 
   it('endurance at 0 points (incompetent) gives -1 HP', () => {
@@ -50,10 +48,10 @@ describe('useCharacterStats', () => {
     expect(stats.maxHP.value).toBe(9) // 10 - 1
   })
 
-  it('endurance at 1 point (initie) gives net 0 HP from endurance', () => {
-    // incompetent(-1) + initie(+1) = 0 net
+  it('endurance at 1 point (initie) gives +1 HP (incompetent malus skipped)', () => {
+    // incompetent malus skipped (totalPoints > 0). Only initie(+1) applies.
     const stats = setup({ endurance: 1 })
-    expect(stats.maxHP.value).toBe(10)
+    expect(stats.maxHP.value).toBe(11)
   })
 
   it('adds sanity from courage entraine and competent', () => {
@@ -69,9 +67,10 @@ describe('useCharacterStats', () => {
   })
 
   it('adds souffle from endurance maitre', () => {
-    // Endurance at 9 = maitre: -1+1+1+1+2 = +4 HP, +1 Souffle
+    // Endurance at 9 = maitre. Incompetent malus skipped.
+    // initie(+1) + entraine(+1) + competent(+1) + maitre(+2) = +5 HP, maitre also +1 Souffle.
     const stats = setup({ endurance: 9 })
-    expect(stats.maxHP.value).toBe(14)
+    expect(stats.maxHP.value).toBe(15)
     expect(stats.maxSouffle.value).toBe(11)
   })
 
@@ -95,11 +94,11 @@ describe('useCharacterStats', () => {
   })
 
   it('computes initiative modifiers', () => {
-    // Instinct at 1 = initie: incompetent(-1) + initie(+1) = net 0
-    // Perception at 0 = incompetent: -1
-    // Total: -1
+    // Instinct at 1 = initie: malus skipped, only initie(+1).
+    // Perception at 0 = incompetent: -1.
+    // Total: 0.
     const stats = setup({ instinct: 1 })
-    expect(stats.initiativeModifier.value).toBe(-1)
+    expect(stats.initiativeModifier.value).toBe(0)
   })
 
   it('instinct at 0 (incompetent) gives -1 initiative', () => {
@@ -109,11 +108,19 @@ describe('useCharacterStats', () => {
   })
 
   it('perception entraine gives +1 initiative', () => {
-    // Perception at 3 = entraine: incompetent(-1) + entraine(+1) = net 0
-    // Instinct at 0 = incompetent: -1
-    // Total: -1
+    // Perception at 3 = entraine: malus skipped, only entraine(+1).
+    // Instinct at 0 = incompetent: -1.
+    // Total: 0.
     const stats = setup({ perception: 3 })
-    expect(stats.initiativeModifier.value).toBe(-1)
+    expect(stats.initiativeModifier.value).toBe(0)
+  })
+
+  it('instinct entraine no longer triggers the incompetent malus', () => {
+    // Bug regression: with Instinct at 2 (entraine) and Perception incompetent,
+    // the character should get +1 from Instinct initie, the incompetent malus
+    // should no longer apply. Total = +1 (Instinct) -1 (Perception incompetent) = 0.
+    const stats = setup({ instinct: 2 })
+    expect(stats.initiativeModifier.value).toBe(0)
   })
 
   it('collects unlocked talents', () => {
@@ -125,9 +132,9 @@ describe('useCharacterStats', () => {
   })
 
   it('combines stats from multiple skills', () => {
-    // Endurance 5 (competent: +2 HP net) + Courage 5 (competent: +3 PSM) + Agilite 9 (maitre: +1 Souffle, +1 ST)
+    // Endurance 5 (competent: +3 HP, malus skipped) + Courage 5 (competent: +3 PSM) + Agilite 9 (maitre: +1 Souffle, +1 ST)
     const stats = setup({ endurance: 5, courage: 5, agilite: 9 })
-    expect(stats.maxHP.value).toBe(12)
+    expect(stats.maxHP.value).toBe(13)
     expect(stats.maxSanity.value).toBe(13)
     expect(stats.maxSouffle.value).toBe(11)
     expect(stats.stModifier.value).toBe(1)
@@ -138,5 +145,18 @@ describe('useCharacterStats', () => {
     const stats = setup({ martial: 1 }, {}, { martial: 2 })
     const martialTalents = stats.unlockedTalents.value.filter(t => t.skill === 'martial')
     expect(martialTalents).toHaveLength(3) // incompetent + initie + entraine
+  })
+
+  it('archerie cs_modifier malus disappears once trained', () => {
+    // Archerie incompetent grants +1 CS attaque_distance. Once at initie (1 point),
+    // the malus must no longer be applied to csModifiers.
+    const stats = setup({ archerie: 1 })
+    expect(stats.csModifiers.value['attaque_distance'] ?? 0).toBe(0)
+  })
+
+  it('archerie at incompetent still applies the cs_modifier malus', () => {
+    // Sanity check: at 0 points the malus must still be applied.
+    const stats = setup()
+    expect(stats.csModifiers.value['attaque_distance']).toBe(1)
   })
 })
